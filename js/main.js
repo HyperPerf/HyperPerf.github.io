@@ -20,8 +20,8 @@ function renderDoctrineCards(containerId, isOpponent = false) {
         card.setAttribute('data-doctrine', key);
         card.innerHTML = `
             <h3>${doctrine.icon || '⚔️'} ${doctrine.name || key}</h3>
-            <p>${isOpponent ? `Votre adversaire utilisera ${doctrine.name || key}.` : doctrine.description || ''}</p>
-            ${doctrine.quote ? `<p><em>${doctrine.quote}</em></p>` : ''}
+            <p>${isOpponent ? `${doctrine.descriptionEnemy || key}.` : doctrine.description || ''}</p>
+            ${doctrine.descriptionQuote ? `<p><em>${doctrine.descriptionQuote}</em></p>` : ''}
         `;
         card.style.borderTop = `3px solid ${doctrine.color}`;
         card.addEventListener('click', () => {
