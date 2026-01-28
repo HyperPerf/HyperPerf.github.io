@@ -949,7 +949,205 @@ export const NIHILIST_MOVES = [
             "Inflige des dégâts élevés et réduit la capacité de l'adversaire à utiliser des mouvements coûteux en concentration."
     }
 ];
+export const MARXIST_MOVES = [
+    // Niveau 1
+    {
+        id: "lutte_classes",
+        label: "Lutte des Classes",
+        level: 1,
+        baseDmg: 12,
+        precision: 0.9,
+        focus: 6,
+        quotes: [
+            "« L'histoire de toute société jusqu'à nos jours est l'histoire de la lutte des classes. » — Karl Marx, *Manifeste du Parti Communiste* (1848)",
+            "« Les hommes font leur propre histoire, mais ils ne la font pas arbitrairement. » — Karl Marx, *Le 18 Brumaire de Louis Bonaparte* (1852)",
+            "« La bourgeoisie a forgé les armes qui la tueront. » — Karl Marx, *Manifeste du Parti Communiste* (1848)",
+            "« Les opprimés peuvent briser leurs chaînes. » — Karl Marx, *Critique du programme de Gotha* (1875)",
+            "« La lutte est le moteur de l'histoire. » — Friedrich Engels, *Anti-Dühring* (1878)"
+        ],
+        gameplay: "Inflige des dégâts de base tout en réduisant légèrement la concentration de l'adversaire (représentant la prise de conscience de classe)."
+    },
+    {
+        id: "plus_value",
+        label: "Extraction de Plus-Value",
+        level: 1,
+        baseDmg: 10,
+        precision: 0.95,
+        focus: 4,
+        quotes: [
+            "« Le capital est du travail mort qui ne s'anime qu'en suçant du travail vivant. » — Karl Marx, *Le Capital* (1867)",
+            "« La plus-value est la pierre angulaire de l'exploitation capitaliste. » — Karl Marx, *Le Capital* (1867)",
+            "« Le travail non payé est la source de toute richesse. » — Karl Marx, *Théories sur la plus-value* (1862)",
+            "« L'exploitation est le fondement du système capitaliste. » — Karl Marx, *Salaire, Prix et Profit* (1865)",
+            "« Le profit n'est que du travail volé. » — Friedrich Engels, *La Situation de la classe laborieuse en Angleterre* (1845)"
+        ],
+        gameplay: "Inflige des dégâts et vole 2 points de concentration à l'adversaire (symbolisant l'extraction de plus-value)."
+    },
+    {
+        id: "conscience_classe",
+        label: "Prise de Conscience",
+        level: 1,
+        baseDmg: 0,
+        precision: 1.0,
+        focus: -8, // Restaure la concentration
+        quotes: [
+            "« Les idées dominantes d'une époque sont les idées de la classe dominante. » — Karl Marx, *L'Idéologie allemande* (1845)",
+            "« La conscience de classe est le premier pas vers la libération. » — Karl Marx, *Lettres à Kugelmann* (1871)",
+            "« Les prolétaires n'ont rien à perdre que leurs chaînes. » — Karl Marx, *Manifeste du Parti Communiste* (1848)",
+            "« La prise de conscience est une arme révolutionnaire. » — Rosa Luxemburg, *Grève de masse, parti et syndicats* (1906)",
+            "« Comprendre sa position dans les rapports de production, c'est déjà commencer à se libérer. » — Karl Marx, *Misère de la philosophie* (1847)"
+        ],
+        gameplay: "Restaure la concentration et réduit l'aporie, représentant l'éveil de la conscience révolutionnaire."
+    },
+    {
+        id: "dialectique",
+        label: "Dialectique Matérielle",
+        level: 1,
+        baseDmg: 14,
+        precision: 0.85,
+        focus: 7,
+        quotes: [
+            "« La dialectique est l'âme du devenir et du mouvement. » — Karl Marx, *Le Capital* (1867)",
+            "« Tout ce qui est solide se dissout dans l'air. » — Karl Marx, *Manifeste du Parti Communiste* (1848)",
+            "« La contradiction est le moteur du changement. » — Friedrich Engels, *Dialectique de la nature* (1883)",
+            "« La vérité est toujours concrète. » — Karl Marx, *Thèses sur Feuerbach* (1845)",
+            "« La réalité est un processus dialectique en perpétuel mouvement. » — Karl Marx, *Grundrisse* (1857)"
+        ],
+        gameplay: "Inflige des dégâts et a une chance d'augmenter les dégâts des prochains tours (représentant l'accélération historique)."
+    },
 
+    // Niveau 2
+    {
+        id: "revolution",
+        label: "Révolution Prolétarienne",
+        level: 2,
+        baseDmg: 28,
+        precision: 0.8,
+        focus: 12,
+        quotes: [
+            "« Prolétaires de tous les pays, unissez-vous ! » — Karl Marx, *Manifeste du Parti Communiste* (1848)",
+            "« La révolution est la locomotive de l'histoire. » — Karl Marx, *La Sainte Famille* (1845)",
+            "« La violence est l'accoucheuse de toute vieille société enceinte d'une société nouvelle. » — Karl Marx, *Le Capital* (1867)",
+            "« La révolution sociale ne peut pas être une révolution par étapes. » — Rosa Luxemburg, *Réforme ou Révolution* (1900)",
+            "« Le jour de la révolution sera le jour de la libération définitive. » — Karl Marx, *Discours sur la Pologne* (1848)"
+        ],
+        gameplay: "Inflige des dégâts élevés et a une chance de provoquer une aporie chez l'adversaire (représentant le bouleversement révolutionnaire)."
+    },
+    {
+        id: "expropriation",
+        label: "Expropriation des Expropriateurs",
+        level: 2,
+        baseDmg: 0,
+        precision: 1.0,
+        focus: 15,
+        quotes: [
+            "« Exproprier les expropriateurs ! » — Karl Marx, *Le Capital* (1867)",
+            "« La propriété privée est le vol. » — Pierre-Joseph Proudhon (cité par Marx dans *Misère de la philosophie*)",
+            "« La socialisation des moyens de production est la clé de la libération. » — Karl Marx, *Critique du programme de Gotha* (1875)",
+            "« La propriété capitaliste est un vol organisé. » — Friedrich Engels, *L'Origine de la famille, de la propriété privée et de l'État* (1884)",
+            "« La terre aux paysans, les usines aux ouvriers ! » — Lénine (inspiré des écrits de Marx)"
+        ],
+        gameplay: "Vole 15 points de concentration à l'adversaire et les transfère au joueur (symbolisant la redistribution des richesses)."
+    },
+    {
+        id: "mat_histo",
+        label: "Matérialisme Historique",
+        level: 2,
+        baseDmg: 25,
+        precision: 0.85,
+        focus: 10,
+        quotes: [
+            "« Ce n'est pas la conscience des hommes qui détermine leur être, c'est inversement leur être social qui détermine leur conscience. » — Karl Marx, *L'Idéologie allemande* (1845)",
+            "« L'histoire se fait avec des conditions matérielles données. » — Friedrich Engels, *Lettre à Bloch* (1890)",
+            "« Les hommes font leur histoire dans des conditions qu'ils ne choisissent pas. » — Karl Marx, *Le 18 Brumaire de Louis Bonaparte* (1852)",
+            "« Les rapports de production déterminent les rapports sociaux. » — Karl Marx, *Préface à la Contribution à la critique de l'économie politique* (1859)",
+            "« L'infrastructure économique conditionne la superstructure idéologique. » — Karl Marx, *Le Capital* (1867)"
+        ],
+        gameplay: "Inflige des dégâts et réduit la capacité de l'adversaire à utiliser des mouvements de haut niveau (représentant les contraintes matérielles)."
+    },
+    {
+        id: "internationale",
+        label: "Solidarité Internationale",
+        level: 2,
+        baseDmg: 20,
+        precision: 0.9,
+        focus: 8,
+        quotes: [
+            "« Prolétaires de tous les pays, unissez-vous ! » — Karl Marx, *Manifeste du Parti Communiste* (1848)",
+            "« La solidarité est l'arme des opprimés. » — Karl Liebknecht (inspiré de Marx)",
+            "« L'internationalisme est le fondement de la lutte révolutionnaire. » — Rosa Luxemburg",
+            "« La chaîne de la solidarité est plus forte que les chaînes de l'oppression. » — Karl Marx, *Lettres à Kugelmann* (1871)",
+            "« Un seul monde, une seule lutte ! » — Slogan inspiré des écrits marxistes"
+        ],
+        gameplay: "Inflige des dégâts et augmente la faveur de l'auditoire (représentant le soutien des masses)."
+    },
+
+    // Niveau 3
+    {
+        id: "dict_proletariat",
+        label: "Dictature du Prolétariat",
+        level: 3,
+        baseDmg: 60,
+        precision: 0.7,
+        focus: 25,
+        quotes: [
+            "« Entre la société capitaliste et la société communiste, il y a la période de transformation révolutionnaire de la première en la seconde. À quoi correspond une période de transition politique où l'État ne peut être autre chose que la dictature révolutionnaire du prolétariat. » — Karl Marx, *Critique du programme de Gotha* (1875)",
+            "« La dictature du prolétariat est le passage nécessaire vers une société sans classes. » — Friedrich Engels, *Anti-Dühring* (1878)",
+            "« La démocratie bourgeoise doit être remplacée par la démocratie prolétarienne. » — Karl Marx, *La Guerre civile en France* (1871)",
+            "« La transition vers le communisme nécessite une phase de pouvoir ouvrier. » — Lénine (développé à partir des écrits de Marx)",
+            "« La dictature du prolétariat est l'instrument de l'émancipation humaine. » — Rosa Luxemburg"
+        ],
+        gameplay: "Inflige des dégâts massifs et empêche l'adversaire d'utiliser des capacités spéciales pendant 2 tours (représentant la répression des contre-révolutionnaires)."
+    },
+    {
+        id: "communisme",
+        label: "Société Sans Classes",
+        level: 3,
+        baseDmg: 0,
+        precision: 1.0,
+        focus: 30,
+        quotes: [
+            "« De chacun selon ses capacités, à chacun selon ses besoins. » — Karl Marx, *Critique du programme de Gotha* (1875)",
+            "« Le communisme est le mouvement réel qui abolit l'état actuel des choses. » — Karl Marx, *L'Idéologie allemande* (1845)",
+            "« L'émancipation des travailleurs sera l'œuvre des travailleurs eux-mêmes. » — Karl Marx, *Règles de l'Association internationale des travailleurs* (1864)",
+            "« Le communisme n'est pas un idéal auquel la réalité devra se conformer, mais le mouvement réel qui abolit l'état actuel des choses. » — Karl Marx, *L'Idéologie allemande* (1845)",
+            "« La société communiste sera l'aboutissement de l'histoire humaine. » — Friedrich Engels, *Socialisme utopique et socialisme scientifique* (1880)"
+        ],
+        gameplay: "Restaure complètement la concentration et annule toutes les pénalités, représentant l'avènement d'une société harmonieuse."
+    },
+    {
+        id: "praxis",
+        label: "Praxis Révolutionnaire",
+        level: 3,
+        baseDmg: 55,
+        precision: 0.75,
+        focus: 20,
+        quotes: [
+            "« Les philosophes n'ont fait qu'interpréter le monde de différentes manières, ce qui importe c'est de le transformer. » — Karl Marx, *Thèses sur Feuerbach* (1845)",
+            "« La théorie devient une force matérielle quand elle s'empare des masses. » — Karl Marx, *Introduction à la critique de la philosophie du droit de Hegel* (1844)",
+            "« La praxis est l'unité de la théorie et de la pratique. » — Karl Marx, *Thèses sur Feuerbach* (1845)",
+            "« La révolution est la critique en acte. » — Karl Marx, *Lettres de 1843*",
+            "« La véritable philosophie est l'activité pratique qui change le monde. » — Karl Marx, *Thèses sur Feuerbach* (1845)"
+        ],
+        gameplay: "Inflige des dégâts élevés et augmente les dégâts des prochains mouvements (représentant l'accélération révolutionnaire)."
+    },
+    {
+        id: "mat_dialectique",
+        label: "Matérialisme Dialectique",
+        level: 3,
+        baseDmg: 50,
+        precision: 0.8,
+        focus: 22,
+        quotes: [
+            "« La dialectique matérielle est la loi fondamentale du développement de la nature, de la société et de la pensée. » — Friedrich Engels, *Dialectique de la nature* (1883)",
+            "« La vérité est toujours concrète. » — Karl Marx, *Thèses sur Feuerbach* (1845)",
+            "« La matière est première, la conscience en est le reflet. » — Karl Marx, *L'Idéologie allemande* (1845)",
+            "« Les contradictions internes sont le moteur du développement. » — Friedrich Engels, *Anti-Dühring* (1878)",
+            "« Le monde n'est pas à comprendre, mais à transformer par la praxis dialectique. » — Karl Marx, *Thèses sur Feuerbach* (1845)"
+        ],
+        gameplay: "Inflige des dégâts et a une chance de désactiver les capacités spéciales de l'adversaire (représentant la résolution des contradictions historiques)."
+    }
+];
 // Doctrines
 export const DOCTRINES = {
     stoic: {
@@ -957,6 +1155,9 @@ export const DOCTRINES = {
         color: "#2a9d8f",
         icon: "🛡️",
         name: "Stoïcien",
+        description: "Maîtrisez vos passions, suivez la raison et affrontez l'adversité avec une volonté inébranlable.",
+        descriptionQuote: "« Ce qui ne dépend pas de nous ne nous concerne pas. »",
+        descriptionEnemy: "Votre adversaire utilisera la raison et la maîtrise des passions.",
         logMessage: (move, dmg) => `✓ ${move.label} : ${move.quotes[Math.floor(Math.random() * move.quotes.length)]}`,
         opponentLogMessage: (name, move, dmg) =>
             `⚔️ ${name} utilise ${move.label} ! ${move.quotes[Math.floor(Math.random() * move.quotes.length)]}`,
@@ -986,6 +1187,9 @@ export const DOCTRINES = {
         color: "#457b9d",
         icon: "🌿",
         name: "Épicurien",
+        description: "Cherchez l'ataraxie, cultivez l'amitié et évitez la douleur pour atteindre le bonheur.",
+        descriptionQuote: "« Rien n'est suffisant pour celui pour qui le suffisant est peu. »",
+        descriptionEnemy: "Votre adversaire cherchera l'ataraxie et le plaisir raisonné.",
         logMessage: (move, dmg) =>
             `🌿 ${move.label} : ${move.quotes[Math.floor(Math.random() * move.quotes.length)]} (${dmg}).`,
         opponentLogMessage: (name, move, dmg) =>
@@ -1016,6 +1220,10 @@ export const DOCTRINES = {
         color: "#ffb703",
         icon: "☸️",
         name: "Bouddhiste",
+        description:
+            "Éteignez le désir, reconnaissez la souffrance et atteignez l'éveil par la sagesse et la compassion.",
+        descriptionQuote: "« La souffrance est la conséquence du désir. »",
+        descriptionEnemy: "Votre adversaire visera l'éveil et la cessation de la souffrance.",
         logMessage: (move, dmg) =>
             `☸️ ${move.label} : ${move.quotes[Math.floor(Math.random() * move.quotes.length)]} (${dmg}).`,
         opponentLogMessage: (name, move, dmg) =>
@@ -1046,6 +1254,9 @@ export const DOCTRINES = {
         color: "#8B0000",
         icon: "🐕",
         name: "Cynique",
+        description: "Rejetez les conventions, vivez simplement et provoquez l'auditoire par votre liberté radicale.",
+        descriptionQuote: "« La liberté est le bien le plus précieux. »", // Diogène
+        descriptionEnemy: "Votre adversaire utilisera la provocation et le mépris des conventions.",
         logMessage: (move, dmg) =>
             `🐕 ${move.label} : ${move.quotes[Math.floor(Math.random() * move.quotes.length)]} (${dmg}).`,
         opponentLogMessage: (name, move, dmg) =>
@@ -1076,6 +1287,9 @@ export const DOCTRINES = {
         color: "#800020",
         icon: "💀",
         name: "Nihiliste",
+        description: "Embrassez le vide existentiel, rejetez toute valeur et démontrez l'absurdité fondamentale de l'existence par une destruction méthodique des illusions.",
+    descriptionQuote: "« Tout ce qui était solide se dissout dans l'air. »", // — Karl Marx, *Le Manifeste du Parti Communiste* (1848)", // Bien que Marx ne soit pas nihiliste, cette phrase est souvent reprise par les nihilistes
+    descriptionEnemy: "Votre adversaire utilisera le désespoir métaphysique et l'absurdité comme armes, niant toute signification à la victoire comme à la défaite.",
         logMessage: (move, dmg) =>
             `💀 ${move.label} : ${move.quotes[Math.floor(Math.random() * move.quotes.length)]} (${dmg}).`,
         opponentLogMessage: (name, move, dmg) =>
@@ -1100,5 +1314,49 @@ export const DOCTRINES = {
         moves: NIHILIST_MOVES,
         healthLabel: "Néant",
         focusLabel: "Causalité"
+    },
+    marxist: {
+        id: "marxist",
+        color: "#d62828", // Rouge profond
+        icon: "⚒️",
+        name: "Marxiste",
+        description: "Analysez les rapports de production, mobilisez le prolétariat et transformez les conditions matérielles pour instaurer une société sans classes. La lutte des classes est le moteur de l'histoire.",
+        descriptionQuote: "« Les philosophes n'ont fait qu'interpréter le monde de différentes manières, ce qui importe c'est de le transformer. » — Karl Marx, *Thèses sur Feuerbach* (1845)",
+        descriptionEnemy: "Votre adversaire utilisera l'analyse matérielle des rapports sociaux et la lutte des classes comme armes dialectiques, visant à transformer les conditions de combat en sa faveur.",
+
+        logMessage: (move, dmg) => `⚒️ ${move.label} : ${move.quotes[Math.floor(Math.random() * move.quotes.length)]} (${dmg}).`,
+        opponentLogMessage: (name, move, dmg) => `⚔️ ${name} utilise ${move.label} ! ${move.quotes[Math.floor(Math.random() * move.quotes.length)]} (Dégâts: ${dmg})`,
+        healLogMessage: (move, heal) => `💖 ${move.label} : ${move.quotes[Math.floor(Math.random() * move.quotes.length)]} (+${heal} vitalité)`,
+        verbatimPrefix: "Marxiste : ",
+
+        victoryMessages: [
+            "⚒️ **TRIOMPHE DIALECTIQUE** : *« L'histoire de toute société jusqu'à nos jours est l'histoire de la lutte des classes. » (Marx) - La révolution a triomphé des rapports de production bourgeois.",
+            "⚒️ **VICTOIRE MATÉRIALISTE** : *« Les prolétaires n'ont rien à perdre que leurs chaînes. » (Marx) - Les chaînes de l'oppression ont été brisées par la praxis révolutionnaire.",
+            "⚒️ **RÉVOLUTION ACCOMPLIE** : *« La violence est l'accoucheuse de toute vieille société enceinte d'une société nouvelle. » (Marx) - Le vieux monde s'effondre sous les coups de la dialectique historique.",
+            "⚒️ **DICTATURE DU PROLÉTARIAT** : *« Entre la société capitaliste et la société communiste, il y a la période de transformation révolutionnaire. » (Marx) - La transition vers une société sans classes est en marche.",
+            "⚒️ **PRAXIS VICTORIEUSE** : *« Les philosophes n'ont fait qu'interpréter le monde, ce qui importe c'est de le transformer. » (Marx) - La théorie est devenue une force matérielle.",
+            "⚒️ **SOCIALISME SCIENTIFIQUE** : *« Le communisme n'est pas un idéal auquel la réalité devra se conformer, mais le mouvement réel qui abolit l'état actuel des choses. » (Marx) - La science de l'histoire a prévalu.",
+            "⚒️ **INTERNATIONALE PROLÉTARIENNE** : *« Prolétaires de tous les pays, unissez-vous ! » (Marx) - La solidarité internationale a vaincu les divisions bourgeoises.",
+            "⚒️ **EXPROPRIATION RÉUSSIE** : *« Exproprier les expropriateurs ! » (Marx) - Les moyens de production ont été repris par ceux qui les font fonctionner.",
+            "⚒️ **MATÉRIALISME HISTORIQUE** : *« Ce n'est pas la conscience des hommes qui détermine leur être, c'est inversement leur être social qui détermine leur conscience. » (Marx) - Les conditions matérielles ont déterminé l'issue du combat.",
+            "⚒️ **FIN DE L'HISTOIRE BOURGEOISE** : *« La bourgeoisie a produit ses propres fossoyeurs. » (Marx) - Le capitalisme a engendré les forces qui le détruisent."
+        ],
+
+        defeatMessages: [
+            "⚒️ **DÉFAITE DIALECTIQUE** : *« La lutte des classes peut connaître des reculs temporaires. » (Engels) - Les rapports de production bourgeois ont résisté, mais la contradiction persiste.",
+            "⚒️ **RECUL STRATÉGIQUE** : *« La révolution n'est pas un acte unique, mais un processus. » (Lénine) - Cette défaite est un épisode dans la longue marche de l'histoire.",
+            "⚒️ **CONTRADICTIONS NON RÉSOLUES** : *« Les crises sont inévitables dans le mode de production capitaliste. » (Marx) - Les conditions matérielles n'étaient pas encore mûres pour la transformation.",
+            "⚒️ **LEÇON RÉVOLUTIONNAIRE** : *« Chaque défaite enseigne aux opprimés les moyens de leur future victoire. » (Marx) - L'échec actuel prépare les luttes futures.",
+            "⚒️ **CONSCIENCE INSUFFISANTE** : *« La prise de conscience de classe est un processus long et difficile. » (Marx) - Le prolétariat n'a pas encore atteint le niveau de conscience nécessaire.",
+            "⚒️ **RÉPRESSION BOURGEOISE** : *« La classe dominante ne renonce jamais volontairement à son pouvoir. » (Marx) - Les forces de l'ordre ancien ont temporairement prévalu.",
+            "⚒️ **ÉTAPE NÉCESSAIRE** : *« La révolution ne peut être que l'œuvre de la classe elle-même. » (Marx) - Le processus révolutionnaire demande patience et persévérance.",
+            "⚒️ **ANALYSE MATÉRIELLE** : *« Les hommes font leur histoire, mais dans des conditions qu'ils ne choisissent pas. » (Marx) - Les conditions objectives n'étaient pas favorables.",
+            "⚒️ **RECONSTRUCTION NÉCESSAIRE** : *« Après chaque défaite, il faut recommencer le travail révolutionnaire. » (Luxemburg) - La lutte continue malgré ce revers temporaire.",
+            "⚒️ **DIALECTIQUE DE L'HISTOIRE** : *« Tout ce qui est solide se dissout dans l'air. » (Marx) - Cette défaite fait partie du processus dialectique de l'histoire."
+        ],
+
+        moves: MARXIST_MOVES,
+        healthLabel: "Conscience",
+        focusLabel: "Praxis"
     }
 };
