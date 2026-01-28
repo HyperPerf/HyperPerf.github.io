@@ -1287,7 +1287,7 @@ export const DOCTRINES = {
         color: "#800020",
         icon: "💀",
         name: "Nihiliste",
-        description: "Embrassez le vide existentiel, rejetez toute valeur et démontrez l'absurdité fondamentale de l'existence par une destruction méthodique des illusions.",
+        description: "Embrassez le vide existentiel, rejetez toute valeur et démontrez l'absurdité de l'existence.",
     descriptionQuote: "« Tout ce qui était solide se dissout dans l'air. »", // — Karl Marx, *Le Manifeste du Parti Communiste* (1848)", // Bien que Marx ne soit pas nihiliste, cette phrase est souvent reprise par les nihilistes
     descriptionEnemy: "Votre adversaire utilisera le désespoir métaphysique et l'absurdité comme armes, niant toute signification à la victoire comme à la défaite.",
         logMessage: (move, dmg) =>
@@ -1320,8 +1320,8 @@ export const DOCTRINES = {
         color: "#d62828", // Rouge profond
         icon: "⚒️",
         name: "Marxiste",
-        description: "Analysez les rapports de production, mobilisez le prolétariat et transformez les conditions matérielles pour instaurer une société sans classes. La lutte des classes est le moteur de l'histoire.",
-        descriptionQuote: "« Les philosophes n'ont fait qu'interpréter le monde de différentes manières, ce qui importe c'est de le transformer. » — Karl Marx, *Thèses sur Feuerbach* (1845)",
+        description: "Analysez les rapports de production, mobilisez le prolétariat pour instaurer une société sans classes.",
+        descriptionQuote: "« Les philosophes n'ont fait qu'interpréter le monde de différentes manières, ce qui importe c'est de le transformer. »",// — Karl Marx, *Thèses sur Feuerbach* (1845)",
         descriptionEnemy: "Votre adversaire utilisera l'analyse matérielle des rapports sociaux et la lutte des classes comme armes dialectiques, visant à transformer les conditions de combat en sa faveur.",
 
         logMessage: (move, dmg) => `⚒️ ${move.label} : ${move.quotes[Math.floor(Math.random() * move.quotes.length)]} (${dmg}).`,
