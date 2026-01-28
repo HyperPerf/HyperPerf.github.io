@@ -35,7 +35,7 @@ export class DebateGame {
         //console.log("randElement : ", array);
         //console.log("randElement.length : ", array.length);
         let i = Math.round(Math.random() * (array.length - 1));
-        console.log(i,array[i]);
+        console.log(i, array[i]);
         return array[i];
     }
 
@@ -58,7 +58,6 @@ export class DebateGame {
     }
 
     log(msg, color = "#eee") {
-        //console.log("prout",msg);
         const l = document.getElementById("log");
         const entry = document.createElement("div");
         entry.className = "log-entry";
@@ -210,7 +209,8 @@ export class DebateGame {
             if (shield > 0) {
                 this.p1.shield = shield;
                 this.log(`🛡️ ${move.label} : Bouclier activé (${shield}).`, this.playerDoctrine.color);
-                this.verbatim(`${this.playerDoctrine.verbatimPrefix}${move.quote}`);
+                let quote = this.randElement(move.quotes);
+                this.verbatim(`${this.playerDoctrine.verbatimPrefix}${quote}`);
             }
 
             if (move.level === 3 && Math.random() < 0.6) {
@@ -451,13 +451,14 @@ export class DebateGame {
             const screen = document.getElementById("victory-screen");
             const title = document.getElementById("victory-title");
             const stats = document.getElementById("victory-stats");
-
+            let msg = "";
             if (victory) {
-                title.textContent = this.p1.doctrine.victoryMessage;
-
+                msg = this.randElement(this.p1.doctrine.victoryMessages);
+                title.textContent = msg;
                 title.style.color = "#FFD700";
             } else {
-                title.textContent = this.p1.doctrine.defeatMessage;
+                msg = this.randElement(this.p1.doctrine.defeatMessages);
+                title.textContent = msg;
                 title.style.color = "#FF0000";
             }
 
@@ -471,15 +472,6 @@ export class DebateGame {
 
             screen.style.display = "flex";
             this.log(victory ? "🎉 VICTOIRE PHILOSOPHIQUE !" : "💔 Défaite...", victory ? "#ffb703" : "#e63946");
-        }
-        if (victory) {
-            if (this.playerDoctrine === "cynic") {
-                title.textContent = "🏆 TRIOMPHE CYNIQUE ! L'AUDITOIRE EST BOULEVERSÉ ! 🏆";
-            }
-        } else {
-            if (this.playerDoctrine === "cynic") {
-                title.textContent = "💔 VOTRE PROVOCATION N'A PAS SUFFI... 💔";
-            }
         }
     }
 
