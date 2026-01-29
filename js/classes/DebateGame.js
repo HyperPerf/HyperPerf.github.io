@@ -1,11 +1,15 @@
-import { DOCTRINES } from "../doctrines.js";
+import { DOCTRINES, PUBLIC } from "../doctrines.js";
 import { Philosopher } from "./Philosopher.js";
+import { renderGameUI, renderActionPanel } from "../ui/gameUI.js";
 
 export class DebateGame {
-    constructor(playerDoctrineKey, opponentDoctrineKey) {
+    constructor(playerDoctrineKey, opponentDoctrineKey, publicInc) {
         // Utilise les clés pour accéder aux doctrines
         this.playerDoctrine = DOCTRINES[playerDoctrineKey];
         this.opponentDoctrine = DOCTRINES[opponentDoctrineKey];
+        this.publicInclination = publicInc;
+
+        this.isEnemyTurn = false;
 
         // Stocke les clés des doctrines pour les comparaisons futures
         this.playerDoctrineKey = playerDoctrineKey;
@@ -16,7 +20,8 @@ export class DebateGame {
         this.p2 = new Philosopher("Adversaire", this.opponentDoctrine);
 
         // Initialisation des propriétés du jeu
-        this.publicFav = 50;
+        this.publicFav = this.publicFav || 50;
+        this.publicCredit = this.publicCredit || 0;
         this.currentLevel = 1;
         this.isCounter = false;
         this.gameOver = false;
@@ -24,6 +29,10 @@ export class DebateGame {
         this.turnCount = 1;
         this.damageDealt = 0;
         this.argumentsSuccessful = 0;
+
+        // Propriétés de tour
+        this.currentAtk = null;
+        this.currentDef = null;
 
         // Mise à jour de l'UI
         this.updateUI();
@@ -35,7 +44,7 @@ export class DebateGame {
         //console.log("randElement : ", array);
         //console.log("randElement.length : ", array.length);
         let i = Math.round(Math.random() * (array.length - 1));
-        console.log(i, array[i]);
+        //console.log(i, array[i]);
         return array[i];
     }
 
@@ -127,7 +136,7 @@ export class DebateGame {
         }
 
         let quote = this.randElement(move.quotes);
-        console.log("Joueur quote : ", quote);
+        //console.log("Joueur quote : ", quote);
 
         this.verbatim(`${doctrineInfo?.verbatimPrefix || ""}${quote}`);
     }
@@ -151,11 +160,20 @@ export class DebateGame {
             this.log(`⚔️ ${name} utilise ${move.label} ! Dégâts: ${dmg}`, "#e63946");
         }
         let quote = this.randElement(move.quotes);
-        console.log("Ennemi quote : ", quote);
+        //console.log("Ennemi quote : ", quote);
         this.verbatim(`${doctrineInfo?.verbatimPrefix || ""}${quote}`);
     }
 
     handleMove(move) {
+        this.currentAtk = move;
+        this.currentDef = this.publicInclination;
+
+        let incA = this.currentAtk.inclination;
+        let incB = this.currentDef.inclination;
+        let res = this.currentDef.res || 0;
+
+        //console.warn(this.currentAtk, this.currentDef, incA, incB, res);
+
         if (this.p1.aporie > 0) {
             if (Math.random() < 0.35) {
                 this.log("🌀 L'Aporie vous paralyse ! Votre esprit se perd dans ses contradictions...", "#ff7675");
@@ -193,12 +211,11 @@ export class DebateGame {
                 this.p2.health -= dmg;
                 this.damageDealt += dmg;
                 this.argumentsSuccessful++;
-                this.publicFav = Math.min(100, this.publicFav + 8);
+                //console.warn(incA,incB,dmg,res);
+                this.publicFavUpdate(incA, incB, dmg, (res = 0)); // Appel aux inclinations (vecteurs donc tableaux, de dimensions N, N nombre de types de dégâts)
 
                 const cardRect = document.getElementById("p2-card").getBoundingClientRect();
                 this.showDamagePopup(dmg, cardRect.left + cardRect.width / 2, cardRect.top + 50, "#e63946");
-
-                this.logMoveSuccess(move, dmg, this.playerDoctrineKey);
             }
 
             if (heal > 0) {
@@ -223,7 +240,9 @@ export class DebateGame {
         } else {
             this.log("✗ Argument réfuté par l'adversaire. Retour aux fondamentaux.", "#888");
             this.currentLevel = 1;
-            this.publicFav = Math.max(0, this.publicFav - 5);
+            //console.warn(incA,incB,dmg,res);
+            this.publicFavUpdate(incA, incB, 0, (res = 0));
+            // this.publicFav = Math.max(0, this.publicFav - 5);
             this.isCounter = false;
         }
 
@@ -231,7 +250,73 @@ export class DebateGame {
         this.endTurn();
     }
 
+    produitScalaire(incA, incB) {
+        let result = 0;
+        let produitScalaire = 0;
+        //console.log("WARN : ", incA);
+        for (const key in incA) {
+            if (incB.hasOwnProperty(key)) {
+                //console.log("PS incA incB : ", incA, incB);
+                result = incA[key] * incB[key];
+                produitScalaire += result;
+            } else {
+                console.warn(`Clé "${key}" manquante dans le deuxième objet.`);
+            }
+        }
+        //console.log("Produit Scalaire : ", produitScalaire);
+        return produitScalaire;
+    }
+
+    functionLogistique(credit) {
+        //console.log("Credit avant : ", credit);
+        let lambda = 0.01;
+        let result = (1 / (1 + Math.exp(-lambda * credit))) * 100;
+        //console.log("UPDATE publicFav : ", result);
+        return result;
+    }
+
+    // Inclination est un vecteur de dimension N avec N le nombre de types de concepts,
+    publicFavUpdate(inclinationA, inclinationB, dmg, res) {
+        let publicFavAvant = this.publicFav;
+        let creditAvant = this.publicCredit;
+        let credit = creditAvant;
+        if (this.isEnemyTurn) {
+            credit -= dmg * this.produitScalaire(inclinationA, inclinationB);
+        } else {
+            credit += dmg * this.produitScalaire(inclinationA, inclinationB);
+        }
+        this.publicCredit = credit;
+
+        let publicFav = this.functionLogistique(credit);
+
+        let deltaCredit = credit - creditAvant;
+        let deltaPublicFav = publicFav - publicFavAvant;
+        //console.log("DeltaCredit : ", deltaCredit + " DeltaPublicFav : ", deltaPublicFav);
+        this.publicFav = publicFav;
+        /* console.log(
+            "Crédit avant : " +
+                creditAvant +
+                " " +
+                "crédit actuel : " +
+                this.publicCredit +
+                " " +
+                "publicFavAvant : " +
+                publicFavAvant +
+                " " +
+                "publicFav actuelle : " +
+                this.publicFav
+        );*/
+        if (deltaPublicFav >= 0) {
+            this.log(`Vous gagnez : ${deltaPublicFav.toFixed(1)}% de faveur du public"`);
+        } else if (deltaPublicFav < 0) {
+            this.log(`Vous perdez : ${-deltaPublicFav.toFixed(1)}% de faveur du public"`);
+        }
+
+        renderGameUI(this);
+    }
+
     opponentTurn() {
+        this.isEnemyTurn = true;
         this.showTurnIndicator("p2");
         setTimeout(() => {
             if (this.gameOver) return;
@@ -295,6 +380,13 @@ export class DebateGame {
 
             const opponentDoctrineName = opponentDoctrine.verbatimPrefix.trim();
 
+            this.currentAtk = move;
+            this.currentDef = this.publicInclination;
+
+            let incA = this.currentAtk.inclination;
+            let incB = this.currentDef.inclination;
+            let res = this.currentDef.res || 0;
+
             // Gestion des effets de l'adversaire
             if (move.heal) {
                 this.p2.health = Math.min(100, this.p2.health + move.heal);
@@ -307,7 +399,8 @@ export class DebateGame {
                     const dmg = move.baseDmg || move.dmg || 0;
                     this.p1.health -= dmg;
                     this.p2.shield = move.shield;
-                    this.publicFav = Math.max(0, this.publicFav - 10);
+
+                    this.publicFavUpdate(incA, incB, 0, (res = 0));
 
                     const cardRect = document.getElementById("p1-card").getBoundingClientRect();
                     this.showDamagePopup(dmg, cardRect.left + cardRect.width / 2, cardRect.top + 50, "#e63946");
@@ -329,7 +422,7 @@ export class DebateGame {
                 if (success) {
                     const dmg = move.baseDmg || move.dmg || 0;
                     this.p1.health -= dmg;
-                    this.publicFav = Math.max(0, this.publicFav - 10);
+                    this.publicFavUpdate(incA, incB, dmg, (res = 0));
 
                     const cardRect = document.getElementById("p1-card").getBoundingClientRect();
                     this.showDamagePopup(dmg, cardRect.left + cardRect.width / 2, cardRect.top + 50, "#e63946");
@@ -355,6 +448,9 @@ export class DebateGame {
             this.updateUI();
             this.renderActions();
             this.checkWin();
+            //console.log("Juste avant la fin du tour ennemi.", this.isEnemyTurn);
+            this.isEnemyTurn = false;
+            //console.log("Juste après la fin du tour ennemi.", this.isEnemyTurn);
 
             if (!this.gameOver) {
                 this.showTurnIndicator("p1"); // Retour au tour du joueur
