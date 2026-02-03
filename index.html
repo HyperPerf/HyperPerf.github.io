@@ -14,6 +14,25 @@
             <div class="intro-text">
                 Dans l'arène philosophique, deux écoles s'affrontent. Choisissez votre doctrine.
             </div>
+            
+            <div id="btn-guide" style="text-align: center; margin: 20px 0;">
+    <button style="
+        background: linear-gradient(135deg, #14113f, #312f4c);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        font-size: 2.5em;
+        border-radius: 6px;
+        cursor: pointer;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: all 0.3s;
+    "
+    onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 6px 8px rgba(0,0,0,0.15)'"
+    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 6px rgba(0,0,0,0.1)'"
+    onclick="window.location.href='guide.html'">
+        📖 Guide
+    </button>
+</div>
             <div class="doctrine-choice" id="player-doctrine-choice"></div>
             <div id="opponent-choice">
                 <h2>Choisissez la Doctrine de Votre Adversaire</h2>
@@ -156,15 +175,17 @@
             <div id="log"></div>
             <div id="verbatim"></div>
 
+<div id="craft-pool" class="craft-section"></div>
+            <!--<div id="btn-craft">CRAFT</div>-->
             <div class="controls" id="action-panel"></div>
         </div>
 
-        <div class="victory-screen" id="victory-screen" style="display: none">
+        <div class="victory-screen" id="victory-screen" style="display: none" onclick='style="display:none"'>
             <div class="victory-content">
                 <h2 id="victory-title"></h2>
                 <div class="stats-summary" id="victory-stats"></div>
                 <button
-                    onclick="location.reload()"
+                    onclick=""
                     style="
                         background: linear-gradient(135deg, var(--gold), #d89d00);
                         padding: 15px 40px;
