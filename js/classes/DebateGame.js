@@ -1,6 +1,11 @@
-import { DOCTRINES, PUBLIC } from "../doctrines.js";
+import { DOCTRINES, PUBLIC, STOIC_MOVES } from "../doctrines.js";
 import { Philosopher } from "./Philosopher.js";
-import { renderGameUI, renderActionPanel } from "../ui/gameUI.js";
+import { renderGameUI, renderCraftPool } from "../ui/gameUI.js";
+
+// Helper pour vérifier les sous-ensembles (à placer en haut du fichier)
+Set.prototype.isSubset = function (set) {
+    return [...this].every((item) => set.has(item));
+};
 
 export class DebateGame {
     constructor(playerDoctrineKey, opponentDoctrineKey, publicInc) {
@@ -38,6 +43,14 @@ export class DebateGame {
         this.updateUI();
         this.renderActions();
         this.showTurnIndicator("p1");
+
+        this.usedArguments = []; // Cartes consommées
+
+        this.ensureUIContainers(); // Crée les conteneurs si nécessaire
+
+        this.craftPool = []; // Pool de craft pour stocker les cartes sélectionnées
+        this.selectedInPool = []; // Initialise la sélection
+        this.synthesisResults = [];
     }
 
     randElement(array) {
@@ -46,6 +59,24 @@ export class DebateGame {
         let i = Math.round(Math.random() * (array.length - 1));
         //console.log(i, array[i]);
         return array[i];
+    }
+
+    ensureUIContainers() {
+        // Conteneur pour la main du joueur
+        if (!document.getElementById("player-hand")) {
+            const handContainer = document.createElement("div");
+            handContainer.id = "player-hand";
+            handContainer.className = "cards-container";
+            document.getElementById("game-container").appendChild(handContainer);
+        }
+
+        // Conteneur pour les recettes
+        if (!document.getElementById("recipes-container")) {
+            const recipesContainer = document.createElement("div");
+            recipesContainer.id = "recipes-container";
+            recipesContainer.className = "recipes-container";
+            document.getElementById("game-container").appendChild(recipesContainer);
+        }
     }
 
     showTurnIndicator(player) {
@@ -83,6 +114,22 @@ export class DebateGame {
         v.insertBefore(entry, v.firstChild);
     }
 
+    // Calcule l'efficacité de la combinaison (poids total)
+    calculateEfficiency(selectedCards, recipe) {
+        let totalWeight = 0;
+        //console.log("123", recipe);
+        selectedCards.forEach((card) => {
+            if (card.passed) {
+                let incA = card.inclination;
+                let incB = recipe.inclination;
+                totalWeight += this.produitScalaire(incA, incB);
+                console.log("129", totalWeight);
+            }
+        });
+        //console.log("131", totalWeight);
+        return totalWeight;
+    }
+
     updateComboDots() {
         for (let i = 1; i <= 3; i++) {
             const dot = document.getElementById(`dot${i}`);
@@ -90,20 +137,41 @@ export class DebateGame {
         }
     }
 
+    // Méthode pour ajouter une carte au pool de craft
+    addToCraftPool(card) {
+        // Vérifie si la carte n'est pas déjà dans le pool
+        if (!this.craftPool.some((c) => c.id === card.id)) {
+            this.craftPool.push(card);
+            this.log(`✅ ${card.label} ajouté au pool de craft.`, "#2a9d8f");
+        } else {
+            this.log(`⚠️ ${card.label} est déjà dans le pool de craft.`, "#ff7675");
+        }
+        renderCraftPool(this);
+    }
+
+    // Méthode pour retirer une carte du pool de craft
+    removeFromCraftPool(cardId) {
+        const index = this.craftPool.findIndex((c) => c.id === cardId);
+        if (index !== -1) {
+            const card = this.craftPool[index];
+            this.craftPool.splice(index, 1);
+            this.log(`❌ ${card.label} retiré du pool de craft.`, "#e63946");
+        }
+    }
+
     renderActions() {
+        //console.log("renderActions");
         const panel = document.getElementById("action-panel");
         panel.innerHTML = "";
 
-        const moves = this.playerDoctrine.moves;
+        const moves = this.p1.doctrine.moves;
         const effectiveBase = this.publicFav > 65 ? 2 : 1;
 
         moves.forEach((move) => {
             const btn = document.createElement("button");
             const canUse =
-                (move.level <= effectiveBase ||
-                    move.level <= this.currentLevel ||
-                    (this.isCounter && move.level === this.currentLevel + 1)) &&
-                this.p1.focus >= move.focus;
+                (move.synth === true && this.p1.focus >= move.focus) ||
+                (move.level === 1 && this.p1.focus >= move.focus);
 
             let levelClass = "";
             if (move.level === 2) levelClass = "level-2";
@@ -112,7 +180,7 @@ export class DebateGame {
             btn.innerHTML = `
             <div>L${move.level} - ${move.label}</div>
             <div style="font-size: 0.8em; opacity: 0.7;">
-                💥 ${move.baseDmg || move.dmg || 0} |
+                💥  ${move.baseDmg || move.dmg || 0} |
                 🎯 ${Math.round((move.precision || move.prec || 0) * 100)}% |
                 🧠 ${move.focus || 0}
             </div>
@@ -120,7 +188,33 @@ export class DebateGame {
 
             btn.disabled = !canUse || this.gameOver;
             btn.className = canUse ? `unlocked ${levelClass}` : "";
-            btn.onclick = () => this.handleMove(move);
+            //btn.onclick = () => this.handleMove(move);
+            btn.onclick = () => {
+                if (move.required) {
+                    //console.log("288", move);
+                    // || move.required != []
+                    if (move.synth === true) {
+                        this.handleMove(move);
+                        //move.synth = false;
+                    }
+
+                    // Si c'est une recette, vérifie si elle peut être craftée
+                    else if (this.canCraftWithSelected(move)) {
+                        this.performSynthesis(move.id);
+                        this.log(`✨ Vous pouvez crafter ${move.label} !`, "#a29bfe");
+                        this.handleMove(move);
+                    } else {
+                        this.log(`⚠️ Il manque des ingrédients pour ${move.label}.`, "#ff7675");
+                    }
+                } else {
+                    // Si c'est une carte normale, ajoute-la au pool de craft
+                    //console.log(move);
+
+                    this.handleMove(move);
+                    renderCraftPool(this);
+                }
+            };
+
             panel.appendChild(btn);
         });
 
@@ -151,7 +245,7 @@ export class DebateGame {
         let quote = this.randElement(move.quotes);
         this.verbatim(`${doctrineInfo?.verbatimPrefix || ""}${quote}`);
     }
-
+    // Adapter à chaque type de move
     logOpponentMove(name, move, dmg, doctrine) {
         const doctrineInfo = DOCTRINES[doctrine];
         if (doctrineInfo && doctrineInfo.opponentLogMessage) {
@@ -164,6 +258,101 @@ export class DebateGame {
         this.verbatim(`${doctrineInfo?.verbatimPrefix || ""}${quote}`);
     }
 
+    /**
+     * Met à jour une carte existante après craft (ne crée pas de nouvelle carte).
+     * @param {string} recipeId - ID de la recette à débloquer.
+     * @param {number} weight - Poids calculé.
+     */
+    unlockRecipe(recipeId, weight) {
+        const recipe = this.playerDoctrine.moves.find((m) => m.id === recipeId);
+        if (!recipe) return;
+
+        // Met à jour la carte existante (ne la duplique pas)
+        recipe.unlocked = true;
+        recipe.weight = weight;
+        recipe.level = this.currentLevel + 1; // Niveau supérieur
+    }
+
+    /**
+     * Sélectionne/déselectionne une carte dans le pool de craft
+     */
+    togglePoolSelection(card) {
+        const index = this.selectedInPool.findIndex((c) => c.id === card.id);
+        if (index === -1) {
+            this.selectedInPool.push(card);
+        } else {
+            this.selectedInPool.splice(index, 1);
+        }
+        this.updateSynthesisResults();
+        //console.log("SelectedInPool", this.selectedInPool);
+    }
+
+    /**
+     * Met à jour les résultats de synthèse possibles
+     */
+    updateSynthesisResults() {
+        this.synthesisResults = this.playerDoctrine.moves.filter(
+            (move) => move.required && this.canCraftWithSelected(move)
+        );
+    }
+
+    /**
+     * Vérifie si une recette peut être craftée avec les cartes sélectionnées
+     */
+    canCraftWithSelected(recipe) {
+        //console.warn("canCraftWithSelected");
+        if (!recipe || !recipe.required || !this.selectedInPool) {
+            return false;
+        }
+        // Vérifie que toutes les cartes requises sont présentes dans selectedInPool
+        const canCraft = recipe.required.every((requiredId) =>
+            this.selectedInPool.some((card) => card.id === requiredId)
+        );
+        return canCraft;
+    }
+
+    /**
+     * Effectue la synthèse dialectique
+     * @param {string} recipeId - L'ID de la recette à synthétiser
+     */
+    performSynthesis(recipeId) {
+        const recipe = this.playerDoctrine.moves.find((m) => m.id === recipeId);
+        if (!recipe) {
+            this.log("⚠️ Recette introuvable.", "#e63946");
+            return;
+        }
+
+        // Vérifie une dernière fois que la synthèse est possible
+        if (!this.canCraftWithSelected(recipe)) {
+            this.log("⚠️ La synthèse n'est plus possible (ingrédients manquants).", "#ff7675");
+            return;
+        }
+
+        // Calcule le poids
+        const efficiency = this.calculateEfficiency(this.selectedInPool, recipe);
+
+        // Consomme les cartes du pool
+        this.selectedInPool.forEach((card) => {
+            const index = this.craftPool.findIndex((c) => c.id === card.id);
+            if (index !== -1) {
+                this.craftPool.splice(index, 1);
+            }
+        });
+        this.selectedInPool = [];
+
+        // Met simplement synth à true dans la recette existante
+        recipe.synth = true;
+
+        //console.log("662 : move synth", recipe, this.p1.doctrine.moves, this.playerDoctrine.moves);
+
+        // Met à jour le poids de la recette
+        recipe.weight = efficiency;
+
+        this.log(`✨ Synthèse réussie: ${recipe.label} (Poids: ${efficiency.toFixed(1)})`, "#a29bfe");
+        renderCraftPool(this);
+        this.renderActions(this, this.handleMove.bind(this));
+    }
+
     handleMove(move) {
         this.currentAtk = move;
         this.currentDef = this.publicInclination;
@@ -171,8 +360,6 @@ export class DebateGame {
         let incA = this.currentAtk.inclination;
         let incB = this.currentDef.inclination;
         let res = this.currentDef.res || 0;
-
-        //console.warn(this.currentAtk, this.currentDef, incA, incB, res);
 
         if (this.p1.aporie > 0) {
             if (Math.random() < 0.35) {
@@ -188,6 +375,7 @@ export class DebateGame {
 
         this.p1.focus -= move.focus;
         let chance = move.precision || move.prec;
+        this.addToCraftPool(move);
 
         if (this.isCounter) {
             chance = Math.min(0.98, chance + 0.15);
@@ -196,6 +384,18 @@ export class DebateGame {
         }
 
         if (Math.random() < chance) {
+            //this.addToCraftPool(move);
+            this.log(`🖋️ Votre argument (${move.label}) est passé !`, "#457b9d");
+            //console.warn("714 PSD : ", move);
+
+            let psd = move.passed; //this.p1.doctrine.moves[move].passed;
+            if (!psd || psd === false) {
+                psd = true;
+                //console.warn("719 PSD rendu true");
+            } else {
+                //console.warn("723 PSD déjà true");
+            }
+
             let dmg = move.baseDmg || move.dmg || 0;
             let heal = move.heal || 0;
             let shield = move.shield || 0;
@@ -206,31 +406,31 @@ export class DebateGame {
                 this.p2.shield -= blocked;
                 this.log(`🛡️ Bouclier absorbe ${blocked} dégâts !`, "#457b9d");
             }
-
-            if (dmg > 0) {
+            let verbatimUsed = false;
+            if (dmg > 0 && verbatimUsed === false) {
                 this.p2.health -= dmg;
                 this.damageDealt += dmg;
                 this.argumentsSuccessful++;
                 //console.warn(incA,incB,dmg,res);
                 this.publicFavUpdate(incA, incB, dmg, (res = 0)); // Appel aux inclinations (vecteurs donc tableaux, de dimensions N, N nombre de types de dégâts)
-
+                let quote = this.randElement(move.quotes);
+                this.verbatim(`${this.playerDoctrine.verbatimPrefix} : ${quote}`);
+                verbatimUsed = true;
                 const cardRect = document.getElementById("p2-card").getBoundingClientRect();
                 this.showDamagePopup(dmg, cardRect.left + cardRect.width / 2, cardRect.top + 50, "#e63946");
-            }
-
-            if (heal > 0) {
-                this.p1.health = Math.min(100, this.p1.health + heal);
+            } else if (heal > 0 && verbatimUsed === false) {
+                this.p1.health = Math.min(100000, this.p1.health + heal);
                 this.logHeal(move, heal, this.playerDoctrineKey);
-            }
-
-            if (shield > 0) {
+                let quote = this.randElement(move.quotes);
+                this.verbatim(`${this.playerDoctrine.verbatimPrefix} : ${quote}`);
+                verbatimUsed = true;
+            } else if (shield > 0 && verbatimUsed === false) {
                 this.p1.shield = shield;
                 this.log(`🛡️ ${move.label} : Bouclier activé (${shield}).`, this.playerDoctrine.color);
-                let quote = this.randElement(move.quotes);
+                let quote = this.randElement(move.quotes) || move.quote;
                 this.verbatim(`${this.playerDoctrine.verbatimPrefix}${quote}`);
-            }
-
-            if (move.level === 3 && Math.random() < 0.6) {
+                verbatimUsed = true;
+            } else if (move.level === 3 && Math.random() < 0.6) {
                 this.p2.aporie = 2;
                 this.log("🌀 Votre adversaire est plongé dans une Aporie philosophique !", "#a29bfe");
             }
@@ -251,6 +451,7 @@ export class DebateGame {
     }
 
     produitScalaire(incA, incB) {
+        //console.log("767", incA, incB);
         let result = 0;
         let produitScalaire = 0;
         //console.log("WARN : ", incA);
@@ -263,7 +464,7 @@ export class DebateGame {
                 console.warn(`Clé "${key}" manquante dans le deuxième objet.`);
             }
         }
-        //console.log("Produit Scalaire : ", produitScalaire);
+        //console.log("780 Produit Scalaire : ", produitScalaire);
         return produitScalaire;
     }
 
@@ -293,6 +494,8 @@ export class DebateGame {
         let deltaPublicFav = publicFav - publicFavAvant;
         //console.log("DeltaCredit : ", deltaCredit + " DeltaPublicFav : ", deltaPublicFav);
         this.publicFav = publicFav;
+
+        // DEBUG
         /* console.log(
             "Crédit avant : " +
                 creditAvant +
@@ -315,9 +518,40 @@ export class DebateGame {
         renderGameUI(this);
     }
 
+    // Fonction de scoring
+    scoreMove(moves, gameState) {
+        moves.forEach((m) => {
+            //console.log(this.currentLevel);
+            if (!m.weight) {
+                m.weight = 1;
+            }
+            if (m.level === this.currentLevel && m.weight) {
+                m.weight = 100;
+            } else if (m.level < this.currentLevel && m.weight) {
+                m.weight = 10;
+            } else if (m.level > this.currentLevel && m.weight) {
+                m.weight = 0;
+            }
+        });
+        //console.log(moves);
+    }
+
+    selectMove(moves, gameState) {
+        //const doctrine = doctrines[doctrineKey];
+        //const moves = doctrine.moves;
+        // Trie les mouvements par score décroissant
+        this.scoreMove(moves, this);
+        moves.sort((a, b) => b.weight - a.weight);
+
+        // Choisit le mouvement avec le score le plus élevé
+        //console.log("Sélection, moves", moves[0], moves);
+        return moves[0];
+    }
+
     opponentTurn() {
         this.isEnemyTurn = true;
         this.showTurnIndicator("p2");
+
         setTimeout(() => {
             if (this.gameOver) return;
 
@@ -338,48 +572,14 @@ export class DebateGame {
 
             // Logique de sélection du mouvement
             let move = moves[0]; // Par défaut, sélectionne le premier mouvement
-
-            if (this.opponentDoctrineKey === "stoic") {
-                if (this.p2.health < 35)
-                    move = moves[3]; // Citadelle Intérieure
-                else if (this.p2.health < 60 && Math.random() < 0.4)
-                    move = moves[1]; // Suivre la Nature
-                else if (Math.random() < 0.6)
-                    move = moves[0]; // Dichotomie du Contrôle
-                else move = moves[2]; // Souffle Vital
-            } else if (this.opponentDoctrineKey === "epicurean") {
-                if (this.p2.health < 35)
-                    move = moves[2]; // Retraite au Jardin
-                else if (this.p2.health < 60 && Math.random() < 0.4)
-                    move = moves[3]; // Ataraxie
-                else if (Math.random() < 0.6)
-                    move = moves[0]; // Clinamen
-                else move = moves[1]; // Tétrapharmakon
-            } else if (this.opponentDoctrineKey === "buddhist") {
-                if (this.p2.health < 30)
-                    move = moves[3]; // Sati
-                else if (this.p2.health < 50 && Math.random() < 0.5)
-                    move = moves[5]; // Karuna
-                else if (Math.random() < 0.7)
-                    move = moves[0]; // Dukkha
-                else move = moves[1]; // Tanha
-            } else if (this.opponentDoctrineKey === "cynic") {
-                if (this.p2.health < 35)
-                    move = moves[3]; // Provocation
-                else if (this.p2.health < 60 && Math.random() < 0.4)
-                    move = moves[2]; // Vie Naturelle
-                else if (Math.random() < 0.6)
-                    move = moves[0]; // Lanterne de Diogène
-                else move = moves[1]; // Mépris des Conventions
-            }
-
+            //console.warn("TOUR ENNEMI", move, opponentDoctrine, moves);
+            //console.warn(this.currentLevel);
+            this.selectMove(moves, DebateGame);
             // Vérifie que move n'est pas null
             if (!move) {
                 move = moves[0]; // Par défaut, utilise le premier mouvement si aucun n'est sélectionné
             }
-
             const opponentDoctrineName = opponentDoctrine.verbatimPrefix.trim();
-
             this.currentAtk = move;
             this.currentDef = this.publicInclination;
 
@@ -387,20 +587,25 @@ export class DebateGame {
             let incB = this.currentDef.inclination;
             let res = this.currentDef.res || 0;
 
+            //console.warn("TOUR ENNEMI", move, opponentDoctrineName, incA,incB,res);
+
             // Gestion des effets de l'adversaire
             if (move.heal) {
-                this.p2.health = Math.min(100, this.p2.health + move.heal);
+                this.p2.health = Math.min(100000, this.p2.health + move.heal);
                 this.log(`💖 ${this.p2.name} utilise ${move.label} et se soigne de ${move.heal} points.`, "#2a9d8f");
                 let quote = this.randElement(move.quotes);
+                //console.warn(move, quote);
                 this.verbatim(`${opponentDoctrineName} : ${quote}`);
-            } else if (move.shield) {
+            }
+            if (move.shield) {
                 const success = Math.random() < (move.precision || move.prec);
                 if (success) {
+                    this.log(`🖋️ Rétorsion dialectique, l'argument adverse est passé ! (BOUCLIER)`, "#ff2c2c");
                     const dmg = move.baseDmg || move.dmg || 0;
                     this.p1.health -= dmg;
                     this.p2.shield = move.shield;
 
-                    this.publicFavUpdate(incA, incB, 0, (res = 0));
+                    // this.publicFavUpdate(incA, incB, 0, (res = 0));
 
                     const cardRect = document.getElementById("p1-card").getBoundingClientRect();
                     this.showDamagePopup(dmg, cardRect.left + cardRect.width / 2, cardRect.top + 50, "#e63946");
@@ -410,26 +615,31 @@ export class DebateGame {
                         "#e63946"
                     );
                     let quote = this.randElement(move.quotes);
+                    //console.warn(opponentDoctrineName, quote);
                     this.verbatim(`${opponentDoctrineName} : ${quote}`);
+                    this.publicFavUpdate(incA, incB, 0, (res = 0));
                     this.isCounter = false;
                 } else {
                     this.log("⚡ Vous parez l'attaque ! Parade possible au prochain tour !", "cyan");
                     this.isCounter = true;
                     document.getElementById("counter-badge").style.display = "block";
                 }
-            } else {
+            }
+            if (move.dmg || move.baseDmg) {
                 const success = Math.random() < (move.precision || move.prec);
                 if (success) {
                     const dmg = move.baseDmg || move.dmg || 0;
                     this.p1.health -= dmg;
-                    this.publicFavUpdate(incA, incB, dmg, (res = 0));
+                    this.log(`🖋️ Rétorsion dialectique, l'argument adverse est passé ! (ATTAQUE)`, "#ff2c2c");
 
                     const cardRect = document.getElementById("p1-card").getBoundingClientRect();
                     this.showDamagePopup(dmg, cardRect.left + cardRect.width / 2, cardRect.top + 50, "#e63946");
 
                     this.log(`⚔️ ${this.p2.name} utilise ${move.label} ! Dégâts: ${dmg}`, "#e63946");
                     let quote = this.randElement(move.quotes);
+                    //console.log(opponentDoctrineName, quote);
                     this.verbatim(`${opponentDoctrineName} : ${quote}`);
+                    this.publicFavUpdate(incA, incB, dmg, (res = 0));
                     this.isCounter = false;
                 } else {
                     this.log("⚡ Vous parez l'attaque ! Parade possible au prochain tour !", "cyan");
@@ -449,12 +659,13 @@ export class DebateGame {
             this.renderActions();
             this.checkWin();
             //console.log("Juste avant la fin du tour ennemi.", this.isEnemyTurn);
-            this.isEnemyTurn = false;
+
             //console.log("Juste après la fin du tour ennemi.", this.isEnemyTurn);
 
             if (!this.gameOver) {
                 this.showTurnIndicator("p1"); // Retour au tour du joueur
             }
+            this.isEnemyTurn = false;
         }, 1200);
     }
 
@@ -466,10 +677,10 @@ export class DebateGame {
     }
 
     updateUI() {
-        this.p1.health = Math.max(0, Math.min(100, this.p1.health));
-        this.p2.health = Math.max(0, Math.min(100, this.p2.health));
-        this.p1.focus = Math.max(0, Math.min(100, this.p1.focus));
-        this.p2.focus = Math.max(0, Math.min(100, this.p2.focus));
+        this.p1.health = Math.max(0, Math.min(100000, this.p1.health));
+        this.p2.health = Math.max(0, Math.min(100000, this.p2.health));
+        this.p1.focus = Math.max(0, Math.min(100000, this.p1.focus));
+        this.p2.focus = Math.max(0, Math.min(100000, this.p2.focus));
 
         document.getElementById("p1-health").style.width = this.p1.health + "%";
         document.getElementById("p1-focus").style.width = this.p1.focus + "%";
