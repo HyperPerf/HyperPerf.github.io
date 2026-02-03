@@ -1,6 +1,6 @@
 import { DOCTRINES, PUBLIC } from "./doctrines.js";
 import { hexToRgb } from "./utils.js";
-import { renderGameUI, renderActionPanel } from "./ui/gameUI.js";
+import { renderGameUI, renderCraftPool } from "./ui/gameUI.js";
 import { DebateGame } from "./classes/DebateGame.js";
 
 // Variables globales
@@ -102,13 +102,14 @@ function confirmOpponentChoice() {
 
     document.getElementById("setup-screen").style.display = "none";
     document.getElementById("game-container").style.display = "grid";
-    console.log("WARD 2 : ",PUBLIC);
+    //console.log("WARD 2 : ", PUBLIC);
     const publicInclination = PUBLIC;
     // Passe les clés des doctrines au constructeur de DebateGame
     game = new DebateGame(selectedDoctrine, opponentDoctrine, publicInclination);
 
     renderGameUI(game);
-    renderActionPanel(game, (move) => game.handleMove(move));
+    //renderCraftPool(game);
+    game.renderActions(game, (move) => game.handleMove(move));
 }
 
 // Initialisation au chargement de la page
