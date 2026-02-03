@@ -1,3 +1,115 @@
+export const damageTypes = {
+    emotions: {
+        // Émotionnels
+        colere: {
+            name: "Colère",
+            description: "Provocation, frustration, agressivité.",
+            exemple: "Votre doctrine n’est qu’un refuge pour les lâches !",
+            effetSecondaire: (cible) => {
+                cible.hostilite += 0.1;
+            }
+        },
+        peur: {
+            name: "Peur",
+            description: "Insécurité, angoisse, doute existentiel.",
+            exemple: "Et si votre croyance n’était qu’une illusion ?",
+            effetSecondaire: (cible) => {
+                cible.concentration -= 0.15;
+            }
+        },
+        joie: {
+            name: "Joie",
+            description: "Optimisme, euphorie, satisfaction.",
+            exemple: "Notre voie mène à une sérénité que vous ne connaissez pas !",
+            effetSecondaire: (auditoire) => {
+                auditoire.humeur += 0.2;
+            }
+        },
+        tristesse: {
+            name: "Tristesse",
+            description: "Mélancolie, désespoir, regret.",
+            exemple: "Votre vision du monde est désespérante…",
+            effetSecondaire: (cible) => {
+                cible.vitalite -= 0.1;
+            }
+        },
+        surprise: {
+            name: "Surprise",
+            description: "Étonnement, confusion, incompréhension.",
+            exemple: "Saviez-vous que votre maître a nié ce principe ?",
+            effetSecondaire: (cible) => {
+                cible.tourSilence = true;
+            }
+        },
+        degout: {
+            name: "Dégoût",
+            description: "Rejet, mépris, aversion.",
+            exemple: "Vos idées sont indignes d’un être raisonnable.",
+            effetSecondaire: (cible) => {
+                cible.efficacité -= 0.2;
+            }
+        }
+    },
+
+    // Logiques
+    logique: {
+        contradiction: {
+            name: "Contradiction",
+            description: "Mise en évidence d’une incohérence.",
+            exemple: "Vous prônez la raison, mais votre maître a agi par émotion !",
+            effetSecondaire: (cible) => {
+                cible.concentration -= 0.2;
+            }
+        },
+        sophisme: {
+            name: "Sophisme",
+            description: "Raisonnement fallacieux pour piéger l’adversaire.",
+            exemple: "Si vous croyez en la liberté, vous devez accepter l’esclavage.",
+            effetSecondaire: (cible) => {
+                cible.tourSkip = true;
+            }
+        },
+
+        // Sociaux
+        honte: {
+            name: "Honte",
+            description: "Culpabilisation ou exposition d’une faille morale.",
+            exemple: "Votre doctrine justifie l’égoïsme le plus sordide !",
+            effetSecondaire: (cible) => {
+                cible.provocation -= 0.3;
+            }
+        },
+        scandale: {
+            name: "Scandale",
+            description: "Violation délibérée des normes sociales.",
+            exemple: "Et si nous abolissions toute propriété ?",
+            effetSecondaire: (auditoire) => {
+                auditoire.hostilite += 0.2;
+            }
+        }
+    },
+
+    // Métaphysiques
+    metaphysique: {
+        videExistentiel: {
+            name: "Vide existentiel",
+            description: "Négation du sens ou de la finalité.",
+            exemple: "Votre quête de sens est vaine, car l’univers est indifférent.",
+            effetSecondaire: (cible) => {
+                cible.satori -= 0.2;
+            }
+        },
+        determinisme: {
+            name: "Déterminisme",
+            description: "Affirmation que tout est prédéterminé.",
+            exemple: "Vos choix ne sont qu’une illusion.",
+            effetSecondaire: (cible) => {
+                cible.bonusConcentration = 0;
+            }
+        }
+    }
+};
+
 export const ductiliteRhetorique = {
     rationalite: 0.4,
     emotion: 0.1,
@@ -73,6 +185,12 @@ export const MARXIST_INCLINATION = {
 
 export const PUBLIC = { inclination: ductiliteRhetorique };
 
+/*function inclinationToVector(ductiliteRhetorique){
+    let duct = ductiliteRhetorique;
+    let inc =  0;
+    duct.forEach(e =>{duct.e });
+}*/
+
 export const STOIC_MOVES = [
     // Niveau 1
     {
@@ -91,7 +209,14 @@ export const STOIC_MOVES = [
         ],
         gameplay:
             "Inflige des dégâts modérés tout en rappelant la distinction entre ce qui dépend de nous et ce qui n'en dépend pas.",
-        inclination: STOIC_INCLINATION
+        inclination: {
+            rationalite: 0.9,
+            emotion: 0.3,
+            intuition: 0.1,
+            collectivisme: 0.5,
+            individualisme: 0.8
+        },
+        weight: 0
     },
 
     {
@@ -109,7 +234,14 @@ export const STOIC_MOVES = [
             "« La nature est notre meilleur guide. » — Sénèque"
         ],
         gameplay: "Attaque qui rappelle l'importance d'agir en accord avec la nature et la raison universelle.",
-        inclination: STOIC_INCLINATION
+        inclination: {
+            rationalite: 0.9,
+            emotion: 0.3,
+            intuition: 0.7,
+            collectivisme: 0.4,
+            individualisme: 0.3
+        },
+        weight: 0
     },
     {
         id: "pneuma",
@@ -126,7 +258,14 @@ export const STOIC_MOVES = [
             "« Le feu créateur anime l'univers entier. » — Héraclite (interprétation stoïcienne)"
         ],
         gameplay: "Attaque légère qui symbolise l'interconnexion de toutes choses par le souffle vital (pneuma).",
-        inclination: STOIC_INCLINATION
+        inclination: {
+            rationalite: 0.7,
+            emotion: 0.5,
+            intuition: 0.4,
+            collectivisme: 0.8,
+            individualisme: 0.6
+        },
+        weight: 0
     },
     {
         id: "citadelle",
@@ -143,7 +282,14 @@ export const STOIC_MOVES = [
             "« La sagesse est un refuge sûr. » — Sénèque"
         ],
         gameplay: "Défense solide qui représente la protection de l'âme par la raison.",
-        inclination: STOIC_INCLINATION
+        inclination: {
+            rationalite: 0.7,
+            emotion: 0.3,
+            intuition: 0.4,
+            collectivisme: 0.1,
+            individualisme: 0.9
+        },
+        weight: 0
     },
 
     // Niveau 2
@@ -162,7 +308,16 @@ export const STOIC_MOVES = [
             "« La véritable valeur réside dans la vertu, non dans les possessions. » — Zénon de Cition"
         ],
         gameplay: "Attaque puissante qui rappelle que les biens extérieurs sont indifférents pour le sage.",
-        inclination: STOIC_INCLINATION
+        inclination: {
+            rationalite: 0.7,
+            emotion: 0.3,
+            intuition: 0.2,
+            collectivisme: 0.3,
+            individualisme: 0.8
+        },
+        weight: 0,
+        required: ["citadelle", "dichotomie"],
+        synth: false
     },
     {
         id: "porte",
@@ -179,7 +334,16 @@ export const STOIC_MOVES = [
             "« La mort n'est pas un mal, car elle n'existe pas pour nous quand nous sommes, et nous n'existons plus quand elle vient. » — Épictète"
         ],
         gameplay: "Attaque qui symbolise l'acceptation stoïcienne de la mort comme libération.",
-        inclination: STOIC_INCLINATION
+        inclination: {
+            rationalite: 0.8,
+            emotion: 0.4,
+            intuition: 0.5,
+            collectivisme: 0.4,
+            individualisme: 0.7
+        },
+        weight: 0,
+        required: ["dichotomie", "pneuma"],
+        synth: false
     },
     {
         id: "sympathie",
@@ -196,7 +360,16 @@ export const STOIC_MOVES = [
             "« La sympathie universelle est la marque du sage. » — Chrysippe"
         ],
         gameplay: "Attaque qui rappelle l'interdépendance de toutes choses dans l'univers.",
-        inclination: STOIC_INCLINATION
+        inclination: {
+            rationalite: 0.4,
+            emotion: 0.6,
+            intuition: 0.4,
+            collectivisme: 0.9,
+            individualisme: 0.5
+        },
+        weight: 0,
+        required: ["pneuma", "nature"],
+        synth: false
     },
     {
         id: "brieve",
@@ -213,7 +386,16 @@ export const STOIC_MOVES = [
             "« La brièveté de la vie doit nous inciter à vivre vertueusement. » — Épictète"
         ],
         gameplay: "Attaque qui rappelle l'importance de bien utiliser le temps qui nous est donné.",
-        inclination: STOIC_INCLINATION
+        inclination: {
+            rationalite: 0.8,
+            emotion: 0.3,
+            intuition: 0.3,
+            collectivisme: 0.6,
+            individualisme: 0.7
+        },
+        weight: 0,
+        required: ["pneuma", "dichotomie"],
+        synth: false
     },
 
     // Niveau 3
@@ -232,7 +414,16 @@ export const STOIC_MOVES = [
             "« Tout ce qui arrive arrive comme il doit arriver. » — Chrysippe"
         ],
         gameplay: "Attaque puissante qui représente l'acceptation totale du destin.",
-        inclination: STOIC_INCLINATION
+        inclination: {
+            rationalite: 0.8,
+            emotion: 0.4,
+            intuition: 0.3,
+            collectivisme: 0.5,
+            individualisme: 0.8
+        },
+        weight: 0,
+        required: ["indifferents", "porte"],
+        synth: false
     },
     {
         id: "regard",
@@ -249,7 +440,16 @@ export const STOIC_MOVES = [
             "« Le regard du sage embrasse l'univers entier. » — Zénon de Cition"
         ],
         gameplay: "Attaque qui symbolise la vision élargie du sage stoïcien.",
-        inclination: STOIC_INCLINATION
+        inclination: {
+            rationalite: 0.7,
+            emotion: 0.5,
+            intuition: 0.3,
+            collectivisme: 0.3,
+            individualisme: 0.8
+        },
+        weight: 0,
+        required: ["indifferents", "brieve"],
+        synth: false
     },
     {
         id: "epyrose",
@@ -266,7 +466,16 @@ export const STOIC_MOVES = [
             "« La destruction est aussi une renaissance. » — Sénèque"
         ],
         gameplay: "Attaque ultime qui représente le cycle cosmique de destruction et de renaissance.",
-        inclination: STOIC_INCLINATION
+        inclination: {
+            rationalite: 0.5,
+            emotion: 0.5,
+            intuition: 0.6,
+            collectivisme: 0.3,
+            individualisme: 0.7
+        },
+        weight: 0,
+        required: ["sympathie", "brieve"],
+        synth: false
     }
 ];
 export const BUDDHIST_MOVES = [
@@ -287,7 +496,14 @@ export const BUDDHIST_MOVES = [
         ],
         gameplay:
             "Inflige des dégâts modérés, mais réduit légèrement la concentration de l'adversaire (effet de prise de conscience).",
-        inclination: BUDDHIST_INCLINATION
+        inclination: {
+            rationalite: 0.5,
+            emotion: 0.8,
+            intuition: 0.5,
+            collectivisme: 0.6,
+            individualisme: 0.5
+        },
+        weight: 0
     },
     {
         id: "tanha",
@@ -304,7 +520,14 @@ export const BUDDHIST_MOVES = [
             "« La soif est l'origine de toute douleur. » — Bouddha"
         ],
         gameplay: "Réduit la capacité de l'adversaire à accumuler de la concentration au tour suivant.",
-        inclination: BUDDHIST_INCLINATION
+        inclination: {
+            rationalite: 0.7,
+            emotion: 0.8,
+            intuition: 0.5,
+            collectivisme: 0.5,
+            individualisme: 0.5
+        },
+        weight: 0
     },
     {
         id: "anatta",
@@ -321,7 +544,14 @@ export const BUDDHIST_MOVES = [
             "« Le 'moi' est comme une rivière : toujours en mouvement, jamais le même. » — Bouddha"
         ],
         gameplay: "Ignore les boucliers et inflige des dégâts directs à la vitalité.",
-        inclination: BUDDHIST_INCLINATION
+        inclination: {
+            rationalite: 0.7,
+            emotion: 0.2,
+            intuition: 0.4,
+            collectivisme: 0.4,
+            individualisme: 0.1
+        },
+        weight: 0
     },
     {
         id: "sati",
@@ -338,7 +568,14 @@ export const BUDDHIST_MOVES = [
             "« La pleine conscience est le miroir de la sagesse. » — Anapanasati Sutta"
         ],
         gameplay: "Restaure 10 points de concentration et annule l'aporie.",
-        inclination: BUDDHIST_INCLINATION
+        inclination: {
+            rationalite: 0.8,
+            emotion: 0.3,
+            intuition: 0.5,
+            collectivisme: 0.5,
+            individualisme: 0.4
+        },
+        weight: 0
     },
 
     // Niveau 2
@@ -357,7 +594,14 @@ export const BUDDHIST_MOVES = [
             "« Marcher sur la voie, c'est déjà être libéré. » — Bouddha"
         ],
         gameplay: "Augmente la précision des attaques au tour suivant.",
-        inclination: BUDDHIST_INCLINATION
+        inclination: {
+            rationalite: 0.8,
+            emotion: 0.5,
+            intuition: 0.2,
+            collectivisme: 0.5,
+            individualisme: 0.5
+        },
+        weight: 0
     },
     {
         id: "karuna",
@@ -375,7 +619,14 @@ export const BUDDHIST_MOVES = [
             "« La vraie compassion n'a pas de limites. » — Dalai Lama (inspiré du bouddhisme)"
         ],
         gameplay: "Soigne 15 points de vitalité et réduit l'aporie de l'adversaire.",
-        inclination: BUDDHIST_INCLINATION
+        inclination: {
+            rationalite: 0.5,
+            emotion: 0.9,
+            intuition: 0.6,
+            collectivisme: 0.9,
+            individualisme: 0.6
+        },
+        weight: 0
     },
     {
         id: "sunyata",
@@ -392,7 +643,14 @@ export const BUDDHIST_MOVES = [
             "« Comprendre la vacuité, c'est voir au-delà des apparences. » — Chandrakirti"
         ],
         gameplay: "Inflige des dégâts élevés, mais réduit la concentration du lanceur.",
-        inclination: BUDDHIST_INCLINATION
+        inclination: {
+            rationalite: 0.7,
+            emotion: 0.3,
+            intuition: 0.5,
+            collectivisme: 0.3,
+            individualisme: 0.4
+        },
+        weight: 0
     },
 
     // Niveau 3
@@ -412,7 +670,14 @@ export const BUDDHIST_MOVES = [
         ],
         gameplay:
             "Met fin à l'aporie, restaure toute la concentration et inflige une pénalité permanente à l'adversaire.",
-        inclination: BUDDHIST_INCLINATION
+        inclination: {
+            rationalite: 0.9,
+            emotion: 0.1,
+            intuition: 0.3,
+            collectivisme: 0.2,
+            individualisme: 0.8
+        },
+        weight: 0
     },
     {
         id: "prajna",
@@ -429,7 +694,14 @@ export const BUDDHIST_MOVES = [
             "« Comprendre la vacuité, c'est atteindre la sagesse ultime. » — Nagarjuna"
         ],
         gameplay: "Inflige des dégâts massifs si l'adversaire est en aporie.",
-        inclination: BUDDHIST_INCLINATION
+        inclination: {
+            rationalite: 0.9,
+            emotion: 0.2,
+            intuition: 0.3,
+            collectivisme: 0.5,
+            individualisme: 0.8
+        },
+        weight: 0
     }
 ];
 export const CYNIC_MOVES = [
@@ -450,7 +722,8 @@ export const CYNIC_MOVES = [
         ],
         gameplay:
             "Inflige des dégâts et a une chance de révéler les faiblesses de l'adversaire, réduisant sa précision au tour suivant.",
-        inclination: CYNIC_INCLINATION
+        inclination: CYNIC_INCLINATION,
+        weight: 0
     },
     {
         id: "mepris_conventions",
@@ -467,7 +740,8 @@ export const CYNIC_MOVES = [
             "« Vivre selon la nature, c'est se libérer des masques sociaux. » — Diogène"
         ],
         gameplay: "Réduit la capacité de l'adversaire à utiliser des mouvements de niveau supérieur au tour suivant.",
-        inclination: CYNIC_INCLINATION
+        inclination: CYNIC_INCLINATION,
+        weight: 0
     },
     {
         id: "vie_naturelle",
@@ -486,7 +760,8 @@ export const CYNIC_MOVES = [
         ],
         gameplay:
             "Restaure de la vitalité et augmente légèrement la concentration, reflétant la simplicité de vie cynique.",
-        inclination: CYNIC_INCLINATION
+        inclination: CYNIC_INCLINATION,
+        weight: 0
     },
     {
         id: "provocation",
@@ -503,7 +778,8 @@ export const CYNIC_MOVES = [
             "« Provouer, c'est forcer les masques à tomber. » — Diogène"
         ],
         gameplay: "Inflige des dégâts et a une chance de provoquer une Aporie chez l'adversaire.",
-        inclination: CYNIC_INCLINATION
+        inclination: CYNIC_INCLINATION,
+        weight: 0
     },
 
     // Niveau 2
@@ -523,7 +799,10 @@ export const CYNIC_MOVES = [
             "« Les murs des palais sont des prisons, mon tonneau est la liberté. » — Diogène"
         ],
         gameplay: "Crée un bouclier solide, reflétant l'indifférence aux attaques extérieures.",
-        inclination: CYNIC_INCLINATION
+        inclination: CYNIC_INCLINATION,
+        weight: 0,
+        required: ["mepris_conventions", "provocation"],
+        synth: false
     },
     {
         id: "autarcie",
@@ -540,7 +819,10 @@ export const CYNIC_MOVES = [
             "« L'homme libre n'a besoin de personne. » — Antisthène"
         ],
         gameplay: "Inflige des dégâts et réduit la capacité de l'adversaire à se soigner.",
-        inclination: CYNIC_INCLINATION
+        inclination: CYNIC_INCLINATION,
+        weight: 0,
+        required: ["mepris_conventions", "vie_naturelle"],
+        synth: false
     },
     {
         id: "chien",
@@ -557,7 +839,10 @@ export const CYNIC_MOVES = [
             "« Un chien mord ceux qui le provoquent, un cynique mord ceux qui mentent. » — Antisthène"
         ],
         gameplay: "Attaque puissante qui ignore partiellement les boucliers adverses.",
-        inclination: CYNIC_INCLINATION
+        inclination: CYNIC_INCLINATION,
+        weight: 0,
+        required: ["mepris_conventions", "provocation", "vie_naturelle"],
+        synth: false
     },
     {
         id: "cosmopolitisme",
@@ -574,7 +859,10 @@ export const CYNIC_MOVES = [
             "« Un vrai citoyen n'a pas besoin de passeport. » — Diogène"
         ],
         gameplay: "Inflige des dégâts et augmente la faveur de l'auditoire.",
-        inclination: CYNIC_INCLINATION
+        inclination: CYNIC_INCLINATION,
+        weight: 0,
+        required: ["tonneau", "diogene_lanterne"],
+        synth: false
     },
 
     // Niveau 3
@@ -593,7 +881,10 @@ export const CYNIC_MOVES = [
             "« Un homme libre est un roi, même dans un tonneau. » — Diogène"
         ],
         gameplay: "Restaure toute la concentration et annule l'Aporie.",
-        inclination: CYNIC_INCLINATION
+        inclination: CYNIC_INCLINATION,
+        weight: 0,
+        required: ["mepris_conventions", "provocation"],
+        synth: false
     },
     {
         id: "defi_alexandre",
@@ -610,7 +901,10 @@ export const CYNIC_MOVES = [
             "« La grandeur est une illusion, la liberté est réelle. » — Diogène"
         ],
         gameplay: "Attaque puissante qui a une chance de désorienter complètement l'adversaire.",
-        inclination: CYNIC_INCLINATION
+        inclination: CYNIC_INCLINATION,
+        weight: 0,
+        required: ["mepris_conventions", "provocation", "tonneau", "chien"],
+        synth: false
     },
     {
         id: "mendicite",
@@ -628,7 +922,10 @@ export const CYNIC_MOVES = [
             "« La vraie richesse est dans le détachement. » — Antisthène"
         ],
         gameplay: "Soigne complètement la vitalité et restaure une grande partie de la concentration.",
-        inclination: CYNIC_INCLINATION
+        inclination: CYNIC_INCLINATION,
+        weight: 0,
+        required: ["cosmopolitisme", "provocation", "lanterne_diogene", "tonneau"],
+        synth: false
     },
     {
         id: "ploutos",
@@ -645,7 +942,10 @@ export const CYNIC_MOVES = [
             "« Ploutos est un dieu aveugle qui ne voit pas la vraie pauvreté. » — Diogène"
         ],
         gameplay: "Inflige des dégâts élevés et réduit la capacité de l'adversaire à utiliser des mouvements coûteux.",
-        inclination: CYNIC_INCLINATION
+        inclination: CYNIC_INCLINATION,
+        weight: 0,
+        required: ["chien", "vie_naturelle", "lanterne_diogene"],
+        synth: false
     }
 ];
 export const EPICUR_MOVES = [
@@ -665,7 +965,8 @@ export const EPICUR_MOVES = [
             "« Dans l'infini, une petite déviation fait toute la différence. » — Lucrèce"
         ],
         gameplay: "Inflige des dégâts légers mais a une chance de désorienter l'adversaire.",
-        inclination: EPICUR_INCLINATION
+        inclination: EPICUR_INCLINATION,
+        weight: 0
     },
     {
         id: "tetrapharmakon",
@@ -682,7 +983,8 @@ export const EPICUR_MOVES = [
             "« La sagesse commence par la libération de la peur. » — Épicure"
         ],
         gameplay: "Réduit la peur de l'adversaire, augmentant légèrement la faveur de l'auditoire.",
-        inclination: EPICUR_INCLINATION
+        inclination: EPICUR_INCLINATION,
+        weight: 0
     },
     {
         id: "jardin",
@@ -700,7 +1002,8 @@ export const EPICUR_MOVES = [
             "« Le bonheur est une vie cachée. » — Épicure"
         ],
         gameplay: "Soigne 15 points de vitalité et restaure partiellement la concentration.",
-        inclination: EPICUR_INCLINATION
+        inclination: EPICUR_INCLINATION,
+        weight: 0
     },
     {
         id: "ataraxie",
@@ -718,7 +1021,8 @@ export const EPICUR_MOVES = [
             "« L'ataraxie est la liberté ultime. » — Lucrèce"
         ],
         gameplay: "Crée un bouclier léger et réduit l'aporie de l'adversaire.",
-        inclination: EPICUR_INCLINATION
+        inclination: EPICUR_INCLINATION,
+        weight: 0
     },
 
     // Niveau 2
@@ -738,7 +1042,8 @@ export const EPICUR_MOVES = [
         ],
         gameplay:
             "Inflige des dégâts modérés et restaure un peu de concentration si le joueur a plus de 50% de vitalité.",
-        inclination: EPICUR_INCLINATION
+        inclination: EPICUR_INCLINATION,
+        weight: 0
     },
     {
         id: "philia",
@@ -756,7 +1061,8 @@ export const EPICUR_MOVES = [
             "« Sans amitié, aucun plaisir n'est complet. » — Épicure"
         ],
         gameplay: "Soigne 20 points de vitalité et augmente la faveur de l'auditoire.",
-        inclination: EPICUR_INCLINATION
+        inclination: EPICUR_INCLINATION,
+        weight: 0
     },
     {
         id: "aponia",
@@ -773,7 +1079,8 @@ export const EPICUR_MOVES = [
             "« La douleur est un maître sévère mais nécessaire. » — Lucrèce"
         ],
         gameplay: "Réduit la capacité de l'adversaire à infliger des dégâts critiques au tour suivant.",
-        inclination: EPICUR_INCLINATION
+        inclination: EPICUR_INCLINATION,
+        weight: 0
     },
     {
         id: "autarkeia",
@@ -791,7 +1098,8 @@ export const EPICUR_MOVES = [
             "« L'indépendance est le plus grand des trésors. » — Épicure"
         ],
         gameplay: "Crée un bouclier modéré et réduit les besoins en concentration pour les prochains tours.",
-        inclination: EPICUR_INCLINATION
+        inclination: EPICUR_INCLINATION,
+        weight: 0
     },
 
     // Niveau 3
@@ -811,7 +1119,8 @@ export const EPICUR_MOVES = [
             "« Le bonheur est un art qui s'apprend. » — Épicure"
         ],
         gameplay: "Soigne 30 points de vitalité, restaure complètement la concentration et annule l'aporie.",
-        inclination: EPICUR_INCLINATION
+        inclination: EPICUR_INCLINATION,
+        weight: 0
     },
     {
         id: "katastematic",
@@ -828,7 +1137,8 @@ export const EPICUR_MOVES = [
             "« Le plaisir durable est celui qui naît de la modération. » — Épicure"
         ],
         gameplay: "Inflige des dégâts élevés et réduit la capacité de l'adversaire à se soigner.",
-        inclination: EPICUR_INCLINATION
+        inclination: EPICUR_INCLINATION,
+        weight: 0
     },
     {
         id: "prolepsis",
@@ -845,7 +1155,8 @@ export const EPICUR_MOVES = [
             "« La sagesse commence par l'intuition juste. » — Épicure"
         ],
         gameplay: "Anticipe les attaques adverses, augmentant les chances de parade au tour suivant.",
-        inclination: EPICUR_INCLINATION
+        inclination: EPICUR_INCLINATION,
+        weight: 0
     },
     {
         id: "kyriologoumena",
@@ -864,7 +1175,8 @@ export const EPICUR_MOVES = [
         ],
         gameplay:
             "Crée un bouclier puissant et inflige des dégâts modérés, tout en augmentant la faveur de l'auditoire.",
-        inclination: EPICUR_INCLINATION
+        inclination: EPICUR_INCLINATION,
+        weight: 0
     }
 ];
 export const NIHILIST_MOVES = [
@@ -885,7 +1197,8 @@ export const NIHILIST_MOVES = [
         ],
         gameplay:
             "Inflige des dégâts modérés et réduit légèrement la concentration de l'adversaire, reflétant l'absurdité de l'existence.",
-        inclination: NIHILIST_INCLINATION
+        inclination: NIHILIST_INCLINATION,
+        weight: 0
     },
     {
         id: "desespoir",
@@ -902,7 +1215,8 @@ export const NIHILIST_MOVES = [
             "« Le désespoir est la lucidité face à l’absence de sens. » — Emil Cioran"
         ],
         gameplay: "Inflige des dégâts et a une chance de provoquer une légère aporie chez l'adversaire.",
-        inclination: NIHILIST_INCLINATION
+        inclination: NIHILIST_INCLINATION,
+        weight: 0
     },
     {
         id: "vide",
@@ -919,7 +1233,8 @@ export const NIHILIST_MOVES = [
             "« Le vide est la seule réalité qui ne mente pas. » — Emil Cioran"
         ],
         gameplay: "Restaure la concentration, reflétant l'acceptation du vide.",
-        inclination: NIHILIST_INCLINATION
+        inclination: NIHILIST_INCLINATION,
+        weight: 0
     },
     {
         id: "indifference",
@@ -936,7 +1251,8 @@ export const NIHILIST_MOVES = [
             "« L’univers ne nous doit rien. » — Albert Camus"
         ],
         gameplay: "Réduit la capacité de l'adversaire à accumuler de la concentration au tour suivant.",
-        inclination: NIHILIST_INCLINATION
+        inclination: NIHILIST_INCLINATION,
+        weight: 0
     },
 
     // Niveau 2
@@ -955,7 +1271,8 @@ export const NIHILIST_MOVES = [
             "« Tout ce qui était solide se dissout dans l’air. » — Karl Marx"
         ],
         gameplay: "Inflige des dégâts élevés et réduit la concentration de l'adversaire.",
-        inclination: NIHILIST_INCLINATION
+        inclination: NIHILIST_INCLINATION,
+        weight: 0
     },
     {
         id: "nihilisme_passif",
@@ -972,7 +1289,8 @@ export const NIHILIST_MOVES = [
             "« Ne rien faire est la seule action qui ait un sens. » — Inspiré de Søren Kierkegaard"
         ],
         gameplay: "Restaure la concentration et réduit l'aporie, reflétant l'acceptation passive du néant.",
-        inclination: NIHILIST_INCLINATION
+        inclination: NIHILIST_INCLINATION,
+        weight: 0
     },
     {
         id: "nihilisme_actif",
@@ -989,7 +1307,8 @@ export const NIHILIST_MOVES = [
             "« La destruction est la seule vérité. » — Emil Cioran"
         ],
         gameplay: "Inflige des dégâts élevés et réduit la capacité de l'adversaire à se soigner.",
-        inclination: NIHILIST_INCLINATION
+        inclination: NIHILIST_INCLINATION,
+        weight: 0
     },
     {
         id: "chaos",
@@ -1006,7 +1325,8 @@ export const NIHILIST_MOVES = [
             "« Embrasse le chaos, car c’est tout ce qui reste. » — Emil Cioran"
         ],
         gameplay: "Inflige des dégâts et a une chance de désorienter l'adversaire.",
-        inclination: NIHILIST_INCLINATION
+        inclination: NIHILIST_INCLINATION,
+        weight: 0
     },
 
     // Niveau 3
@@ -1025,7 +1345,8 @@ export const NIHILIST_MOVES = [
             "« L’anéantissement est la seule réponse à l’absurdité. » — Albert Camus"
         ],
         gameplay: "Inflige des dégâts massifs et réduit la concentration de l'adversaire de manière significative.",
-        inclination: NIHILIST_INCLINATION
+        inclination: NIHILIST_INCLINATION,
+        weight: 0
     },
     {
         id: "vanite",
@@ -1043,7 +1364,8 @@ export const NIHILIST_MOVES = [
         ],
         gameplay:
             "Restaure toute la concentration et annule l'aporie, reflétant l'acceptation totale de la vanité de toute chose.",
-        inclination: NIHILIST_INCLINATION
+        inclination: NIHILIST_INCLINATION,
+        weight: 0
     },
     {
         id: "destin",
@@ -1060,7 +1382,8 @@ export const NIHILIST_MOVES = [
             "« Le destin est une prison sans murs. » — Emil Cioran"
         ],
         gameplay: "Inflige des dégâts élevés et a une chance de provoquer une aporie prolongée chez l'adversaire.",
-        inclination: NIHILIST_INCLINATION
+        inclination: NIHILIST_INCLINATION,
+        weight: 0
     },
     {
         id: "neant",
@@ -1078,7 +1401,8 @@ export const NIHILIST_MOVES = [
         ],
         gameplay:
             "Inflige des dégâts élevés et réduit la capacité de l'adversaire à utiliser des mouvements coûteux en concentration.",
-        inclination: NIHILIST_INCLINATION
+        inclination: NIHILIST_INCLINATION,
+        weight: 0
     }
 ];
 export const MARXIST_MOVES = [
@@ -1099,7 +1423,8 @@ export const MARXIST_MOVES = [
         ],
         gameplay:
             "Inflige des dégâts de base tout en réduisant légèrement la concentration de l'adversaire (représentant la prise de conscience de classe).",
-        inclination: MARXIST_INCLINATION
+        inclination: MARXIST_INCLINATION,
+        weight: 0
     },
     {
         id: "plus_value",
@@ -1117,7 +1442,8 @@ export const MARXIST_MOVES = [
         ],
         gameplay:
             "Inflige des dégâts et vole 2 points de concentration à l'adversaire (symbolisant l'extraction de plus-value).",
-        inclination: MARXIST_INCLINATION
+        inclination: MARXIST_INCLINATION,
+        weight: 0
     },
     {
         id: "conscience_classe",
@@ -1135,7 +1461,8 @@ export const MARXIST_MOVES = [
         ],
         gameplay:
             "Restaure la concentration et réduit l'aporie, représentant l'éveil de la conscience révolutionnaire.",
-        inclination: MARXIST_INCLINATION
+        inclination: MARXIST_INCLINATION,
+        weight: 0
     },
     {
         id: "dialectique",
@@ -1153,7 +1480,8 @@ export const MARXIST_MOVES = [
         ],
         gameplay:
             "Inflige des dégâts et a une chance d'augmenter les dégâts des prochains tours (représentant l'accélération historique).",
-        inclination: MARXIST_INCLINATION
+        inclination: MARXIST_INCLINATION,
+        weight: 0
     },
 
     // Niveau 2
@@ -1173,7 +1501,8 @@ export const MARXIST_MOVES = [
         ],
         gameplay:
             "Inflige des dégâts élevés et a une chance de provoquer une aporie chez l'adversaire (représentant le bouleversement révolutionnaire).",
-        inclination: MARXIST_INCLINATION
+        inclination: MARXIST_INCLINATION,
+        weight: 0
     },
     {
         id: "expropriation",
@@ -1191,7 +1520,8 @@ export const MARXIST_MOVES = [
         ],
         gameplay:
             "Vole 15 points de concentration à l'adversaire et les transfère au joueur (symbolisant la redistribution des richesses).",
-        inclination: MARXIST_INCLINATION
+        inclination: MARXIST_INCLINATION,
+        weight: 0
     },
     {
         id: "mat_histo",
@@ -1209,7 +1539,8 @@ export const MARXIST_MOVES = [
         ],
         gameplay:
             "Inflige des dégâts et réduit la capacité de l'adversaire à utiliser des mouvements de haut niveau (représentant les contraintes matérielles).",
-        inclination: MARXIST_INCLINATION
+        inclination: MARXIST_INCLINATION,
+        weight: 0
     },
     {
         id: "internationale",
@@ -1226,7 +1557,8 @@ export const MARXIST_MOVES = [
             "« Un seul monde, une seule lutte ! » — Slogan inspiré des écrits marxistes"
         ],
         gameplay: "Inflige des dégâts et augmente la faveur de l'auditoire (représentant le soutien des masses).",
-        inclination: MARXIST_INCLINATION
+        inclination: MARXIST_INCLINATION,
+        weight: 0
     },
 
     // Niveau 3
@@ -1246,7 +1578,8 @@ export const MARXIST_MOVES = [
         ],
         gameplay:
             "Inflige des dégâts massifs et empêche l'adversaire d'utiliser des capacités spéciales pendant 2 tours (représentant la répression des contre-révolutionnaires).",
-        inclination: MARXIST_INCLINATION
+        inclination: MARXIST_INCLINATION,
+        weight: 0
     },
     {
         id: "communisme",
@@ -1264,7 +1597,8 @@ export const MARXIST_MOVES = [
         ],
         gameplay:
             "Restaure complètement la concentration et annule toutes les pénalités, représentant l'avènement d'une société harmonieuse.",
-        inclination: MARXIST_INCLINATION
+        inclination: MARXIST_INCLINATION,
+        weight: 0
     },
     {
         id: "praxis",
@@ -1282,7 +1616,8 @@ export const MARXIST_MOVES = [
         ],
         gameplay:
             "Inflige des dégâts élevés et augmente les dégâts des prochains mouvements (représentant l'accélération révolutionnaire).",
-        inclination: MARXIST_INCLINATION
+        inclination: MARXIST_INCLINATION,
+        weight: 0
     },
     {
         id: "mat_dialectique",
@@ -1300,7 +1635,8 @@ export const MARXIST_MOVES = [
         ],
         gameplay:
             "Inflige des dégâts et a une chance de désactiver les capacités spéciales de l'adversaire (représentant la résolution des contradictions historiques).",
-        inclination: MARXIST_INCLINATION
+        inclination: MARXIST_INCLINATION,
+        weight: 0
     }
 ];
 // Doctrines
@@ -1479,7 +1815,7 @@ export const DOCTRINES = {
     marxist: {
         id: "marxist",
         color: "#d62828", // Rouge profond
-        icon: "⚒️",
+        icon: "⚒️", //☭
         name: "Marxiste",
         description:
             "Analysez les rapports de production, mobilisez le prolétariat pour instaurer une société sans classes.",
