@@ -1,0 +1,1070 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Guide de Gameplay - Logos Punch</title>
+        <style>
+            :root {
+                --primary: #2c3e50;
+                --secondary: #3498db;
+                --accent: #e74c3c;
+                --light: #ecf0f1;
+                --dark: #0a0a0b;
+                --success: #27ae60;
+                --warning: #f39c12;
+                --danger: #e74c3c;
+                --gold: #ffb703;
+                --public-color: #a29bfe;
+                --stoic-color: #2a9d8f;
+                --epicurean-color: #457b9d;
+                --buddhist-color: #ffb703;
+                --cynic-color: #d4a574;
+                --nihilist-color: #800020;
+            }
+
+            body {
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: #e0e0e0;
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 20px;
+                background: linear-gradient(135deg, #0a0a0b 0%, #1a1a2e 100%);
+            }
+
+            header {
+                text-align: center;
+                margin-bottom: 30px;
+                padding: 20px;
+                background: linear-gradient(135deg, rgba(162, 155, 254, 0.2), rgba(162, 155, 254, 0.1));
+                color: var(--gold);
+                border-radius: 15px;
+                border: 2px solid var(--public-color);
+                box-shadow: 0 0 20px rgba(162, 155, 254, 0.2);
+            }
+
+            h1 {
+                font-size: 3em;
+                text-align: center;
+                margin: 20px 0;
+                background: linear-gradient(45deg, var(--gold), var(--public-color));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                animation: glow 2s ease-in-out infinite alternate;
+            }
+
+            h2 {
+                font-size: 1.8em;
+                margin-top: 1.5em;
+                border-bottom: 2px solid var(--gold);
+                padding-bottom: 5px;
+                color: var(--gold);
+            }
+
+            h3 {
+                color: var(--gold);
+                font-size: 1.4em;
+                margin-top: 1em;
+                margin-bottom: 0.5em;
+            }
+
+            h4 {
+                color: var(--secondary);
+                font-size: 1.2em;
+                margin-top: 0.8em;
+                margin-bottom: 0.4em;
+            }
+
+            .section {
+                background: rgba(26, 26, 46, 0.3);
+                padding: 25px;
+                margin-bottom: 25px;
+                border-radius: 15px;
+                border: 1px solid rgba(162, 155, 254, 0.2);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            }
+
+            .doctrine-card {
+                background: rgba(26, 26, 46, 0.4);
+                border-radius: 15px;
+                padding: 20px;
+                margin: 15px 0;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+                border-left: 4px solid var(--gold);
+                transition: all 0.3s ease;
+            }
+
+            .doctrine-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 20px rgba(255, 183, 3, 0.3);
+            }
+
+            .mechanic-box {
+                background: rgba(24, 24, 46, 0.3);
+                border-radius: 10px;
+                padding: 20px;
+                margin: 20px 0;
+                border-left: 4px solid var(--warning);
+                box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.3);
+            }
+
+            .mechanic-box ol {
+                list-style-type: upper-roman;
+                padding-left: 30px;
+            }
+
+            .mechanic-box ol li {
+                margin: 10px 0;
+                color: #ddd;
+            }
+
+            .tip {
+                background: rgba(162, 155, 254, 0.1);
+                padding: 15px;
+                border-radius: 10px;
+                margin: 20px 0;
+                border-left: 4px solid var(--public-color);
+                color: #e0e0e0;
+            }
+
+            .warning {
+                background: rgba(231, 76, 60, 0.1);
+                padding: 15px;
+                border-radius: 10px;
+                margin: 20px 0;
+                border-left: 4px solid var(--danger);
+                color: #ffcccc;
+            }
+
+            .example {
+                background: rgba(255, 183, 3, 0.05);
+                padding: 15px;
+                border-radius: 10px;
+                margin: 20px 0;
+                border-left: 4px solid var(--gold);
+                color: #ffe6cc;
+            }
+
+            code {
+                background-color: rgba(46, 46, 46, 0.5);
+                padding: 3px 8px;
+                border-radius: 5px;
+                font-family: monospace;
+                color: #ffb703;
+            }
+
+            pre {
+                background-color: #1a1a2e;
+                color: #f8f8f2;
+                padding: 20px;
+                border-radius: 10px;
+                overflow-x: auto;
+                border: 1px solid rgba(162, 155, 254, 0.3);
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 20px 0;
+                background: rgba(26, 26, 46, 0.2);
+                border-radius: 10px;
+                overflow: hidden;
+            }
+
+            th {
+                background: linear-gradient(135deg, var(--primary), #1a1a2e);
+                color: var(--gold);
+                padding: 12px;
+                text-align: left;
+            }
+
+            td {
+                padding: 10px 12px;
+                border-bottom: 1px solid rgba(162, 155, 254, 0.1);
+                color: #ddd;
+            }
+
+            tr:nth-child(even) {
+                background: rgba(26, 26, 46, 0.1);
+            }
+
+            tr:hover {
+                background: rgba(255, 183, 3, 0.05);
+            }
+
+            .icon {
+                font-size: 1.2em;
+                margin-right: 8px;
+                color: var(--gold);
+            }
+
+            .badges {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                margin: 12px 0;
+            }
+
+            .badge {
+                background: linear-gradient(135deg, var(--secondary), #2980b9);
+                color: white;
+                padding: 5px 12px;
+                border-radius: 20px;
+                font-size: 0.8em;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            }
+
+            .status-badge {
+                display: inline-block;
+                padding: 4px 8px;
+                border-radius: 12px;
+                font-size: 0.7em;
+                margin-left: 5px;
+                font-weight: bold;
+            }
+
+            .status-passed {
+                background: linear-gradient(135deg, var(--success), #219653);
+                color: white;
+            }
+
+            .status-failed {
+                background: linear-gradient(135deg, var(--danger), #c62828);
+                color: white;
+            }
+
+            .status-available {
+                background: linear-gradient(135deg, var(--secondary), #2980b9);
+                color: white;
+            }
+
+            .status-missing {
+                background: #555;
+                color: #aaa;
+            }
+
+            .flowchart {
+                text-align: center;
+                margin: 25px 0;
+                padding: 20px;
+                background: rgba(26, 26, 46, 0.2);
+                border-radius: 10px;
+                border: 1px solid rgba(162, 155, 254, 0.2);
+            }
+
+            .game-screenshot {
+                max-width: 100%;
+                height: auto;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+                margin: 20px 0;
+                border: 2px solid rgba(255, 183, 3, 0.3);
+            }
+
+            footer {
+                text-align: center;
+                margin-top: 50px;
+                padding: 20px;
+                color: #999;
+                font-size: 0.9em;
+                border-top: 1px solid rgba(162, 155, 254, 0.2);
+            }
+
+            /* Animations */
+            @keyframes glow {
+                from {
+                    filter: drop-shadow(0 0 5px rgba(255, 183, 3, 0.5));
+                }
+                to {
+                    filter: drop-shadow(0 0 20px rgba(255, 183, 3, 0.8));
+                }
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            @keyframes pulse {
+                0%,
+                100% {
+                    transform: scale(1);
+                }
+                50% {
+                    transform: scale(1.05);
+                }
+            }
+
+            /* Styles spécifiques pour les doctrines */
+            .stoic-badge {
+                background: linear-gradient(135deg, var(--stoic-color), #217d75);
+            }
+
+            .epicurean-badge {
+                background: linear-gradient(135deg, var(--epicurean-color), #3a6b8f);
+            }
+
+            .buddhist-badge {
+                background: linear-gradient(135deg, var(--buddhist-color), #d89d00);
+            }
+
+            .cynic-badge {
+                background: linear-gradient(135deg, var(--cynic-color), #b8860b);
+            }
+
+            .nihilist-badge {
+                background: linear-gradient(135deg, var(--nihilist-color), #5e001a);
+            }
+
+            /* Responsive */
+            @media (max-width: 768px) {
+                body {
+                    padding: 10px;
+                }
+
+                .section {
+                    padding: 15px;
+                }
+
+                h1 {
+                    font-size: 2em;
+                }
+
+                table {
+                    font-size: 0.8em;
+                }
+
+                .doctrine-card {
+                    width: 100%;
+                }
+            }
+
+            /* Style pour les listes numérotées en chiffres romains */
+            ol.roman-list {
+                list-style-type: upper-roman;
+                padding-left: 30px;
+            }
+
+            ol.roman-list li {
+                margin: 10px 0;
+                color: #ddd;
+            }
+
+            /* Style pour les boutons */
+            .play-button {
+                display: block;
+                margin: 30px auto;
+                padding: 15px 40px;
+                background: linear-gradient(135deg, var(--gold), #d89d00);
+                color: #0a0a0b;
+                border: none;
+                border-radius: 8px;
+                font-size: 2em;
+                font-weight: bold;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 15px rgba(255, 183, 3, 0.3);
+            }
+
+            .play-button:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 7px 20px rgba(255, 183, 3, 0.5);
+                background: linear-gradient(135deg, #d89d00, var(--gold));
+            }
+
+            .play-button:active {
+                transform: translateY(0);
+            }
+
+            /* Style pour les citations */
+            blockquote {
+                border-left: 4px solid var(--gold);
+                padding: 15px;
+                margin: 20px 0;
+                background: rgba(255, 183, 3, 0.05);
+                font-style: italic;
+                color: #ffe6cc;
+                border-radius: 0 10px 10px 0;
+            }
+
+            /* Style pour les encadrés de code */
+            .code-block {
+                background: #1a1a2e;
+                padding: 20px;
+                border-radius: 10px;
+                margin: 20px 0;
+                border: 1px solid rgba(162, 155, 254, 0.3);
+                overflow-x: auto;
+            }
+
+            .code-block pre {
+                margin: 0;
+                padding: 0;
+                background: transparent;
+                border: none;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>⚔️ LOGOS PUNCH - Guide de Gameplay Complet</h1>
+            <div id="subtitle">La Joute Dialectique Suprême</div>
+        </header>
+
+        <div style="text-align: center; margin: 40px 0">
+            <button class="play-button" onclick="window.location.href='index.html'">
+                <span class="icon">⚔️</span> Jouer
+            </button>
+        </div>
+        <div class="section">
+            <h2>📜 Introduction</h2>
+            <p>
+                Logos Punch est un jeu de débat philosophique où deux écoles de pensée s'affrontent dans une arène
+                dialectique. Votre objectif est de convaincre l'auditoire en utilisant des arguments philosophiques, en
+                combinant des concepts pour créer des arguments plus puissants, et en exploitant les faiblesses de votre
+                adversaire.
+            </p>
+
+            <div class="tip">
+                <strong>💡 Conseil:</strong> Le jeu récompense à la fois la stratégie à court terme (choix d'arguments
+                efficaces) et la planification à long terme (construction d'arguments composés).
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎯 Objectif du Jeu</h2>
+            <p>Pour remporter la partie, vous devez:</p>
+            <ol>
+                <li>Réduire les points de vitalité de votre adversaire à 0</li>
+                <li>Ou maintenir une faveur publique suffisamment élevée pour forcer sa reddition</li>
+                <li>Ou atteindre un niveau de transcendance philosophique (niveau 3)</li>
+            </ol>
+
+            <div class="mechanic-box">
+                <h4>Mécaniques de Victoire:</h4>
+                <ul>
+                    <li><span class="icon">❤️</span> Réduire la vitalité adverse à 0</li>
+                    <li><span class="icon">👥</span> Atteindre 90% de faveur publique</li>
+                    <li><span class="icon">🌟</span> Atteindre le niveau 3 de transcendance</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📚 Doctrines Philosophiques</h2>
+
+            <div class="doctrine-card">
+                <h3>🛡️ Stoïcisme</h3>
+                <div class="badges">
+                    <span class="badge">Raison</span>
+                    <span class="badge">Maîtrise de soi</span>
+                    <span class="badge">Vertu</span>
+                </div>
+                <p>
+                    <strong>Style de jeu:</strong> Défense solide et arguments précis. Excellente résistance aux effets
+                    négatifs.
+                </p>
+                <p><strong>Capacité spéciale:</strong> Réminiscence Platonicienne (restaure toute la concentration)</p>
+                <p><em>« Ce qui ne dépend pas de nous ne nous concerne pas. » — Marc Aurèle</em></p>
+            </div>
+
+            <div class="doctrine-card">
+                <h3>🌿 Épicurisme</h3>
+                <div class="badges">
+                    <span class="badge">Plaisir</span>
+                    <span class="badge">Ataraxie</span>
+                    <span class="badge">Amitié</span>
+                </div>
+                <p>
+                    <strong>Style de jeu:</strong> Équilibre entre attaque et défense. Bonnes capacités de régénération.
+                </p>
+                <p><strong>Capacité spéciale:</strong> Banquet Philosophique (restaure vitalité et concentration)</p>
+                <p><em>« Rien n'est suffisant pour celui pour qui le suffisant est peu. » — Épicure</em></p>
+            </div>
+
+            <div class="doctrine-card">
+                <h3>☸️ Bouddhisme</h3>
+                <div class="badges">
+                    <span class="badge">Sagesse</span>
+                    <span class="badge">Compassion</span>
+                    <span class="badge">Détachement</span>
+                </div>
+                <p>
+                    <strong>Style de jeu:</strong> Jeu défensif avec accumulation de sagesse. Capacités de contrôle
+                    mental.
+                </p>
+                <p>
+                    <strong>Capacité spéciale:</strong> Méditation Profonde (restaure concentration et réduit l'Aporie)
+                </p>
+                <p><em>« La souffrance naît du désir et de l'ignorance. » — Bouddha</em></p>
+            </div>
+
+            <div class="doctrine-card">
+                <h3>🐕 Cynisme</h3>
+                <div class="badges">
+                    <span class="badge">Provocation</span>
+                    <span class="badge">Liberté</span>
+                    <span class="badge">Nature</span>
+                </div>
+                <p>
+                    <strong>Style de jeu:</strong> Aggressif et imprévisible. Capacités de perturbation de l'adversaire.
+                </p>
+                <p><strong>Capacités spéciales:</strong> Mendicité Cynique et Défi Public</p>
+                <p>
+                    <em
+                        >« Je méprise Ploutos (le dieu de la richesse), car la vraie richesse est dans l'âme. » —
+                        Diogène</em
+                    >
+                </p>
+            </div>
+
+            <div class="doctrine-card">
+                <h3>💀 Nihilisme</h3>
+                <div class="badges">
+                    <span class="badge">Absurdité</span>
+                    <span class="badge">Désespoir</span>
+                    <span class="badge">Libération</span>
+                </div>
+                <p>
+                    <strong>Style de jeu:</strong> Puissant mais risqué. Capacités de destruction des arguments
+                    adverses.
+                </p>
+                <p><strong>Capacité spéciale:</strong> Destruction des Valeurs</p>
+                <p><em>« Dieu est mort. » — Nietzsche</em></p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎮 Mécaniques de Base</h2>
+
+            <h3>📊 Statistiques Principales</h3>
+            <table>
+                <tr>
+                    <th>Statistique</th>
+                    <th>Description</th>
+                    <th>Icône</th>
+                </tr>
+                <tr>
+                    <td>Vitalité</td>
+                    <td>Points de vie de votre philosophe. À 0, vous perdez la partie.</td>
+                    <td><span class="icon">❤️</span></td>
+                </tr>
+                <tr>
+                    <td>Concentration</td>
+                    <td>Ressource pour utiliser des arguments puissants. Se régénère partiellement chaque tour.</td>
+                    <td><span class="icon">🧠</span></td>
+                </tr>
+                <tr>
+                    <td>Faveur Publique</td>
+                    <td>Influence sur l'auditoire. Affecte la puissance de vos arguments.</td>
+                    <td><span class="icon">👥</span></td>
+                </tr>
+                <tr>
+                    <td>Aporie</td>
+                    <td>État de confusion qui réduit vos capacités. Certains arguments peuvent l'infliger.</td>
+                    <td><span class="icon">🌀</span></td>
+                </tr>
+                <tr>
+                    <td>Bouclier</td>
+                    <td>Protection temporaire contre les dégâts. Certains arguments en fournissent.</td>
+                    <td><span class="icon">🛡️</span></td>
+                </tr>
+            </table>
+
+            <h3>🔄 Déroulement d'un Tour</h3>
+            <ol>
+                <li><strong>Phase de Sélection:</strong> Choisissez un argument parmi ceux disponibles</li>
+                <li>
+                    <strong>Résolution:</strong> L'argument est évalué en fonction de:
+                    <ul>
+                        <li>Votre niveau de concentration</li>
+                        <li>La faveur publique actuelle</li>
+                        <li>Les inclinations philosophiques</li>
+                        <li>Le niveau de l'argument (1 à 3)</li>
+                    </ul>
+                </li>
+                <li><strong>Effets:</strong> Application des effets de l'argument (dégâts, bouclier, etc.)</li>
+                <li><strong>Tour Adversaire:</strong> Votre adversaire répond avec son propre argument</li>
+            </ol>
+
+            <div class="flowchart">
+                <img
+                    src="https://via.placeholder.com/600x300/2c3e50/ffffff?text=Diagramme+de+Tour"
+                    alt="Diagramme de déroulement d'un tour"
+                    class="game-screenshot" />
+                <p><em>Schéma du déroulement d'un tour type</em></p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🧩 Système de Craft d'Arguments</h2>
+
+            <h3>🔧 Mécanique de Base</h3>
+            <p>
+                Le système de craft vous permet de combiner des arguments de niveau 1 pour créer des arguments plus
+                puissants de niveau supérieur.
+            </p>
+
+            <div class="mechanic-box">
+                <h4>Processus de Craft:</h4>
+                <ol>
+                    <li>Sélectionnez des arguments de niveau 1 dans votre main</li>
+                    <li>Ajoutez-les à votre pool de craft en cliquant dessus</li>
+                    <li>Sélectionnez les arguments dans le pool pour voir les recettes disponibles</li>
+                    <li>Cliquez sur une recette valide pour la synthétiser</li>
+                </ol>
+            </div>
+
+            <h3>📋 Exemple de Recette</h3>
+            <div class="example">
+                <p><strong>Doctrine des Indifférents (Niveau 2)</strong></p>
+                <p><span class="icon">📜</span> <strong>Nécessite:</strong></p>
+                <ul>
+                    <li>Dichotomie du Contrôle <span class="status-badge status-available">DISPONIBLE</span></li>
+                    <li>Citadelle Intérieure <span class="status-badge status-available">DISPONIBLE</span></li>
+                </ul>
+                <p>
+                    <span class="icon">⚔️</span> <strong>Effet:</strong> Attaque puissante (28 dégâts) qui ignore les
+                    distractions extérieures
+                </p>
+                <p><span class="icon">🎯</span> <strong>Précision:</strong> 75%</p>
+                <p><span class="icon">🧠</span> <strong>Coût:</strong> 12 concentration</p>
+            </div>
+
+            <h3>📊 Poids des Arguments</h3>
+            <p>Le poids d'un argument composé dépend:</p>
+            <ul>
+                <li>Du poids des arguments de base <strong>qui ont réussi</strong></li>
+                <li>Des bonus de synthèse (si tous les arguments de base ont réussi)</li>
+                <li>Des inclinations philosophiques actuelles</li>
+            </ul>
+
+            <div class="tip">
+                <strong>💡 Conseil:</strong> Privilégiez les combinaisons où tous les arguments de base ont réussi pour
+                obtenir des bonus de poids supplémentaires.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎯 Stratégies Avancées</h2>
+
+            <h3>📈 Gestion des Ressources</h3>
+            <div class="mechanic-box">
+                <h4>Conseils:</h4>
+                <ul>
+                    <li>Équilibrez l'utilisation de votre concentration entre attaques et synthèses</li>
+                    <li>Utilisez les capacités spéciales de votre doctrine pour restaurer des ressources</li>
+                    <li>Surveillez la faveur publique - elle affecte la puissance de vos arguments</li>
+                    <li>Les arguments de niveau 3 sont puissants mais coûteux - préparez-les à l'avance</li>
+                </ul>
+            </div>
+
+            <h3>🔄 Combos et Synergies</h3>
+            <table>
+                <tr>
+                    <th>Doctrine</th>
+                    <th>Combo Recommandé</th>
+                    <th>Effet</th>
+                </tr>
+                <tr>
+                    <td>Stoïcisme</td>
+                    <td>Dichotomie → Citadelle → Indifférents</td>
+                    <td>Défense impénétrable + attaque puissante</td>
+                </tr>
+                <tr>
+                    <td>Épicurisme</td>
+                    <td>Ataraxie → Amitié → Jardin</td>
+                    <td>Régénération continue + bonus de faveur</td>
+                </tr>
+                <tr>
+                    <td>Bouddhisme</td>
+                    <td>Dukkha → Tanha → Sati</td>
+                    <td>Contrôle mental + réduction des dégâts</td>
+                </tr>
+                <tr>
+                    <td>Cynisme</td>
+                    <td>Provocation → Nature → Mendicité</td>
+                    <td>Perturbation adverse + restauration</td>
+                </tr>
+            </table>
+
+            <h3>🎯 Contre les Différentes Doctrines</h3>
+            <div class="mechanic-box">
+                <h4>Faiblesses par Doctrine:</h4>
+                <ul>
+                    <li><strong>Stoïcisme:</strong> Vulnérable aux arguments émotionnels (faible en "émotion")</li>
+                    <li><strong>Épicurisme:</strong> Sensible aux attaques sur la "raison"</li>
+                    <li><strong>Bouddhisme:</strong> Faible contre les arguments matérialistes</li>
+                    <li><strong>Cynisme:</strong> Peut être contré par des arguments structurés</li>
+                    <li><strong>Nihilisme:</strong> Vulnérable aux arguments basés sur l'espoir</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📊 Système d'Inclinations</h2>
+
+            <p>
+                Chaque argument a des inclinations philosophiques qui affectent son efficacité en fonction du contexte:
+            </p>
+
+            <table>
+                <tr>
+                    <th>Inclination</th>
+                    <th>Description</th>
+                    <th>Doctrines Fortes</th>
+                    <th>Doctrines Faibles</th>
+                </tr>
+                <tr>
+                    <td>Rationalité</td>
+                    <td>Arguments logiques et structurés</td>
+                    <td>Stoïcisme, Nihilisme</td>
+                    <td>Épicurisme</td>
+                </tr>
+                <tr>
+                    <td>Émotion</td>
+                    <td>Arguments basés sur les sentiments</td>
+                    <td>Épicurisme</td>
+                    <td>Stoïcisme</td>
+                </tr>
+                <tr>
+                    <td>Spiritualité</td>
+                    <td>Arguments métaphysiques</td>
+                    <td>Bouddhisme</td>
+                    <td>Nihilisme</td>
+                </tr>
+                <tr>
+                    <td>Matérialisme</td>
+                    <td>Arguments pratiques et concrets</td>
+                    <td>Cynisme</td>
+                    <td>Bouddhisme</td>
+                </tr>
+                <tr>
+                    <td>Collectivisme</td>
+                    <td>Arguments basés sur le groupe</td>
+                    <td>Stoïcisme</td>
+                    <td>Cynisme</td>
+                </tr>
+                <tr>
+                    <td>Individualisme</td>
+                    <td>Arguments centrés sur soi</td>
+                    <td>Cynisme, Épicurisme</td>
+                    <td>Stoïcisme</td>
+                </tr>
+            </table>
+
+            <div class="tip">
+                <strong>💡 Conseil:</strong> Adaptez vos arguments en fonction des inclinations de votre adversaire
+                (visibles dans son profil).
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🏆 Système de Niveaux</h2>
+
+            <h3>📈 Progression</h3>
+            <p>Les arguments sont organisés en 3 niveaux de complexité:</p>
+
+            <div class="mechanic-box">
+                <h4>Niveaux d'Arguments:</h4>
+                <ol>
+                    <li><strong>Niveau 1:</strong> Arguments de base (fondamentaux)</li>
+
+                    <ul>
+                        Disponibles dès le début
+                    </ul>
+                    <ul>
+                        Faible puissance mais peu coûteux
+                    </ul>
+                    <ul>
+                        Exemples: Dichotomie du Contrôle, Ataraxie
+                    </ul>
+
+                    <li><strong>Niveau 2:</strong> Arguments composés (approfondissement)</li>
+
+                    <ul>
+                        Nécessitent 2 arguments de niveau 1
+                    </ul>
+                    <ul>
+                        Puissance moyenne, coût modéré
+                    </ul>
+                    <ul>
+                        Exemples: Doctrine des Indifférents, Jardin Épicurien
+                    </ul>
+
+                    <li><strong>Niveau 3:</strong> Arguments transcendants</li>
+
+                    <ul>
+                        Nécessitent 2-3 arguments de niveau 2
+                    </ul>
+                    <ul>
+                        Très puissants mais coûteux
+                    </ul>
+                    <ul>
+                        Exemples: Amor Fati, Ataraxie Parfaite
+                    </ul>
+                </ol>
+            </div>
+
+            <div class="flowchart">
+                <pre>
+            Niveau 1          Niveau 2               Niveau 3
+            ┌───────┐        ┌─────────────┐        ┌───────────────┐
+            │Arg A  │        │Arg Composé │        │Arg Transcendant│
+            └───────┘        └─────────────┘        └───────────────┘
+               │                 │                      │
+               ▼                 ▼                      ▼
+            ┌───────┐        ┌─────────────┐        ┌───────────────┐
+            │Arg B  │ ───→  │Arg Composé │ ───→  │Pouvoir Ultime  │
+            └───────┘        └─────────────┘        └───────────────┘
+            </pre
+                >
+                <p><em>Progression des niveaux d'arguments</em></p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎮 Interface de Jeu</h2>
+
+            <h3>📱 Éléments Principaux</h3>
+            <div class="mechanic-box">
+                <ol>
+                    <li><strong>Jauges:</strong> Vitalité, concentration, faveur publique</li>
+                    <li><strong>Journal:</strong> Historique des actions et citations</li>
+                    <li><strong>Pool de Craft:</strong> Zone pour préparer les combinaisons</li>
+                    <li><strong>Synthèses Disponibles:</strong> Recettes réalisables avec la sélection actuelle</li>
+                    <li><strong>Cartes du Joueur:</strong> Arguments disponibles (niveau 1)</li>
+                    <li><strong>Actions spécifiques à la doctrine</strong></li>
+                </ol>
+            </div>
+
+            <div class="example">
+                <img
+                    src="./images/guide-screenshot-1-2.png"
+                    alt="Capture d'écran de l'interface"
+                    class="game-screenshot" />
+                <img
+                    src="./images/guide-screenshot-2-2.png"
+                    alt="Capture d'écran de l'interface"
+                    class="game-screenshot" />
+                <p><em>Exemple d'interface de jeu</em></p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎯 Conseils par Doctrine</h2>
+
+            <div class="doctrine-card">
+                <h3>🛡️ Stratégie Stoïcienne</h3>
+                <ul>
+                    <li>Commencez par "Dichotomie du Contrôle" pour une base solide</li>
+                    <li>Utilisez "Citadelle Intérieure" pour vous protéger</li>
+                    <li>Visez "Amor Fati" comme pouvoir ultime</li>
+                    <li>Exploitez les faiblesses émotionnelles de l'adversaire</li>
+                </ul>
+            </div>
+
+            <div class="doctrine-card">
+                <h3>🌿 Stratégie Épicurienne</h3>
+                <ul>
+                    <li>"Ataraxie" est votre meilleur bouclier</li>
+                    <li>Combinez avec "Amitié" pour des bonus de régénération</li>
+                    <li>Utilisez le "Banquet Philosophique" pour restaurer vos ressources</li>
+                    <li>Évitez les confrontations directes avec les Stoïciens</li>
+                </ul>
+            </div>
+
+            <div class="doctrine-card">
+                <h3>☸️ Stratégie Bouddhiste</h3>
+                <ul>
+                    <li>Accumulez du Satori avec des arguments réussis</li>
+                    <li>"Karuna" est excellent contre les doctrines individualistes</li>
+                    <li>Utilisez la "Méditation Profonde" pour contrer l'Aporie</li>
+                    <li>Vos arguments gagnent en puissance avec le temps</li>
+                </ul>
+            </div>
+
+            <div class="doctrine-card">
+                <h3>🐕 Stratégie Cynique</h3>
+                <ul>
+                    <li>Utilisez la "Provocation" pour perturber l'adversaire</li>
+                    <li>"Vie Naturelle" offre un bon équilibre</li>
+                    <li>Vos capacités sont plus efficaces avec une faible faveur publique</li>
+                    <li>Excellents contre les doctrines structurées comme le Stoïcisme</li>
+                </ul>
+            </div>
+
+            <div class="doctrine-card">
+                <h3>💀 Stratégie Nihiliste</h3>
+                <ul>
+                    <li>"Absurdité Existentielle" est un bon opener</li>
+                    <li>Combinez avec "Désespoir" pour des attaques puissantes</li>
+                    <li>Vos arguments ignorent partiellement les boucliers</li>
+                    <li>Efficaces contre les doctrines basées sur l'espoir</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>⚠️ Erreurs Courantes et Solutions</h2>
+
+            <table>
+                <tr>
+                    <th>Problème</th>
+                    <th>Cause</th>
+                    <th>Solution</th>
+                </tr>
+                <tr>
+                    <td>Impossible de synthétiser</td>
+                    <td>Ingrédients manquants ou non sélectionnés</td>
+                    <td>Vérifiez que tous les ingrédients sont dans le pool ET sélectionnés</td>
+                </tr>
+                <tr>
+                    <td>Boutons grisés</td>
+                    <td>Concentration insuffisante ou niveau trop élevé</td>
+                    <td>Utilisez des arguments de niveau inférieur ou restaurez votre concentration</td>
+                </tr>
+                <tr>
+                    <td>Faveur publique en baisse</td>
+                    <td>Arguments mal adaptés à l'auditoire</td>
+                    <td>Adaptez vos arguments aux inclinations du public</td>
+                </tr>
+                <tr>
+                    <td>Aporie persistante</td>
+                    <td>Trop d'arguments complexes échoués</td>
+                    <td>Utilisez des arguments simples pour vous rétablir</td>
+                </tr>
+                <tr>
+                    <td>Recettes non disponibles</td>
+                    <td>Niveau de transcendance insuffisant</td>
+                    <td>Atteignez le niveau requis avec des arguments réussis</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>📊 Glossaire des Termes</h2>
+
+            <table>
+                <tr>
+                    <th>Terme</th>
+                    <th>Définition</th>
+                </tr>
+                <tr>
+                    <td>Argument</td>
+                    <td>Une carte représentant un concept philosophique utilisé pour attaquer ou défendre</td>
+                </tr>
+                <tr>
+                    <td>Pool de Craft</td>
+                    <td>Zone où sont stockés les arguments sélectionnés pour la synthèse</td>
+                </tr>
+                <tr>
+                    <td>Synthèse Dialectique</td>
+                    <td>Processus de combinaison d'arguments pour en créer de plus puissants</td>
+                </tr>
+                <tr>
+                    <td>Inclinations</td>
+                    <td>Valeurs philosophiques qui affectent l'efficacité des arguments</td>
+                </tr>
+                <tr>
+                    <td>Aporie</td>
+                    <td>État de confusion qui réduit les capacités du philosophe</td>
+                </tr>
+                <tr>
+                    <td>Transcendance</td>
+                    <td>Niveau de maîtrise philosophique (1 à 3)</td>
+                </tr>
+                <tr>
+                    <td>Faveur Publique</td>
+                    <td>Mesure de l'approbation de l'auditoire</td>
+                </tr>
+                <tr>
+                    <td>Concentration</td>
+                    <td>Ressource nécessaire pour utiliser des arguments puissants</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>🎯 Conclusion et Conseils Finaux</h2>
+
+            <p>Logos Punch est un jeu qui récompense à la fois:</p>
+            <ul>
+                <li>
+                    <strong>La stratégie à court terme:</strong> Choix tactique des arguments en fonction de la
+                    situation
+                </li>
+                <li><strong>La planification à long terme:</strong> Construction progressive d'arguments puissants</li>
+                <li>
+                    <strong>L'adaptation:</strong> Réaction aux mouvements de l'adversaire et aux changements de faveur
+                    publique
+                </li>
+            </ul>
+
+            <div class="tip">
+                <strong>💡 Derniers Conseils:</strong>
+                <ul>
+                    <li>Expérimentez avec différentes doctrines pour trouver votre style</li>
+                    <li>Apprenez les forces et faiblesses de chaque doctrine adverse</li>
+                    <li>Ne négligez pas les arguments de niveau 1 - ils sont la base de vos combinaisons</li>
+                    <li>Surveillez toujours votre concentration et votre vitalité</li>
+                    <li>Utilisez les capacités spéciales de votre doctrine au bon moment</li>
+                </ul>
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ Attention:</strong> Les arguments de niveau 3 sont extrêmement puissants mais coûteux.
+                Préparez-les avec soin et utilisez-les au moment décisif!
+            </div>
+        </div>
+
+        <div style="text-align: center; margin: 40px 0">
+            <button class="play-button" onclick="window.location.href='index.html'">
+                <span class="icon">⚔️</span> Retour au Jeu
+            </button>
+        </div>
+
+        <footer
+            style="
+                text-align: center;
+                margin-top: 30px;
+                padding: 15px;
+                background-color: var(--primary);
+                color: white;
+                border-radius: 8px;
+            ">
+            <p>
+                Version 1.1.0 - Dernière mise à jour: 03/02/2026<br />
+
+                © 2026 Logos Punch - La Joute Dialectique Suprême - Hyper Perf Productions
+            </p>
+        </footer>
+
+        <script>
+            // Ajoute des infobulles pour les termes techniques
+            document.querySelectorAll("code").forEach((el) => {
+                el.title = "Terme technique - Passez la souris pour plus d'informations";
+            });
+
+            // Ajoute des effets de survol sur les cartes de doctrine
+            document.querySelectorAll(".doctrine-card").forEach((card) => {
+                card.addEventListener("mouseenter", () => {
+                    card.style.transform = "scale(1.02)";
+                    card.style.boxShadow = "0 5px 15px rgba(0,0,0,0.1)";
+                });
+                card.addEventListener("mouseleave", () => {
+                    card.style.transform = "scale(1)";
+                    card.style.boxShadow = "0 2px 5px rgba(0,0,0,0.1)";
+                });
+            });
+        </script>
+    </body>
+</html>
