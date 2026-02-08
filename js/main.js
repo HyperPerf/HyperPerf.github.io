@@ -1,6 +1,6 @@
 import { DOCTRINES, PUBLIC } from "./doctrines.js";
 import { hexToRgb } from "./utils.js";
-import { renderGameUI, renderCraftPool } from "./ui/gameUI.js";
+import { renderGameUI, renderCraftPool, animateAttack } from "./ui/gameUI.js";
 import { DebateGame } from "./classes/DebateGame.js";
 
 // Variables globales
@@ -14,7 +14,14 @@ function renderDoctrineCards(containerId, isOpponent = false) {
     if (!container) return;
     container.innerHTML = "";
 
+
+    
+    
     Object.entries(DOCTRINES).forEach(([key, doctrine]) => {
+        /*const rgb = doctrine.rgb;
+        let r = rgb.r;
+        let g = rgb.g;
+        let b = rgb.b;*/
         const card = document.createElement("div");
         card.className = "doctrine-card";
         card.setAttribute("data-doctrine", key);
@@ -24,6 +31,7 @@ function renderDoctrineCards(containerId, isOpponent = false) {
             ${doctrine.descriptionQuote ? `<p><em>${doctrine.descriptionQuote}</em></p>` : ""}
         `;
         card.style.borderTop = `3px solid ${doctrine.color}`;
+        //card.style.background = `radial-gradient(circle at center, rgba(${r}, ${g}, ${b}, 0.75) 0%, transparent 70%)`;
         card.addEventListener("click", () => {
             if (isOpponent) {
                 selectOpponentDoctrine(key, card);
@@ -117,3 +125,45 @@ document.addEventListener("DOMContentLoaded", () => {
     renderDoctrineCards("player-doctrine-choice");
     document.getElementById("confirm-opponent-button").addEventListener("click", confirmOpponentChoice);
 });
+
+
+const philosophicalQuotes = [
+    { text: "« Connais-toi toi-même »", author: "Socrate", doctrine: "universel" },
+    { text: "« Ce qui ne me tue pas me rend plus fort »", author: "Nietzsche", doctrine: "nihilist" },
+    { text: "« L'homme est la mesure de toute chose »", author: "Protagoras", doctrine: "universel" },
+    { text: "« La vie non examinée ne vaut pas la peine d'être vécue »", author: "Socrate", doctrine: "universel" },
+    { text: "« La souffrance naît du désir »", author: "Bouddha", doctrine: "buddhist" },
+    { text: "« Je suis un citoyen du monde »", author: "Diogène", doctrine: "cynic" },
+    { text: "« Rien n'est suffisant pour celui pour qui le suffisant est peu »", author: "Épicure", doctrine: "epicurean" },
+    { text: "« Ce qui ne dépend pas de nous ne nous concerne pas »", author: "Épictète", doctrine: "stoic" }
+];
+
+function displayRandomQuote() {
+    const quoteContainer = document.createElement('div');
+    quoteContainer.id = 'philosophical-quote';
+    quoteContainer.style.textAlign = 'center';
+    quoteContainer.style.margin = '20px 0';
+    quoteContainer.style.padding = '15px';
+    quoteContainer.style.borderLeft = '4px solid var(--gold)';
+    quoteContainer.style.background = 'rgba(26, 26, 46, 0.3)';
+    quoteContainer.style.borderRadius = '8px';
+    quoteContainer.style.fontStyle = 'italic';
+    quoteContainer.style.animation = 'fadeIn 1s ease-out';
+
+    const randomIndex = Math.floor(Math.random() * philosophicalQuotes.length);
+    const quote = philosophicalQuotes[randomIndex];
+
+    quoteContainer.innerHTML = `
+        <p>"${quote.text}"</p>
+        <p style="text-align: right; margin-top: 10px; font-size: 0.9em; color: var(--gold)">— ${quote.author}</p>
+    `;
+
+    // Insère la citation après le titre principal
+    const title = document.querySelector('h1');
+    if (title) {
+        title.after(quoteContainer);
+    }
+}
+
+// Appelle cette fonction au chargement de la page
+window.addEventListener('DOMContentLoaded', displayRandomQuote);
