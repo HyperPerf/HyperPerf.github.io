@@ -1,6 +1,6 @@
 import { DOCTRINES, PUBLIC, STOIC_MOVES } from "../doctrines.js";
 import { Philosopher } from "./Philosopher.js";
-import { renderGameUI, renderCraftPool } from "../ui/gameUI.js";
+import { renderGameUI, renderCraftPool, animateAttack } from "../ui/gameUI.js";
 
 // Helper pour vérifier les sous-ensembles (à placer en haut du fichier)
 Set.prototype.isSubset = function (set) {
@@ -9,6 +9,9 @@ Set.prototype.isSubset = function (set) {
 
 export class DebateGame {
     constructor(playerDoctrineKey, opponentDoctrineKey, publicInc) {
+        document.documentElement.style.setProperty("--victory-threshold", "100%");
+        document.documentElement.style.setProperty("--defeat-threshold", "0%");
+        document.documentElement.style.setProperty("--current-fav", "50%");
         // Utilise les clés pour accéder aux doctrines
         this.playerDoctrine = DOCTRINES[playerDoctrineKey];
         this.opponentDoctrine = DOCTRINES[opponentDoctrineKey];
@@ -106,11 +109,21 @@ export class DebateGame {
         l.insertBefore(entry, l.firstChild);
     }
 
-    verbatim(q) {
+    verbatim(q, isPlayer = true) {
         const v = document.getElementById("verbatim");
         const entry = document.createElement("div");
         entry.className = "verbatim-entry";
         entry.textContent = q;
+
+        // Applique la couleur en fonction du personnage
+        if (this.isEnemyTurn === false) {
+            entry.style.color = "var(--player-color)";
+            entry.style.borderLeft = "3px solid var(--player-color)";
+        } else {
+            entry.style.color = "var(--enemy-color)";
+            entry.style.borderLeft = "3px solid var(--enemy-color)";
+        }
+
         v.insertBefore(entry, v.firstChild);
     }
 
@@ -119,19 +132,18 @@ export class DebateGame {
         let totalWeight = 0;
         //console.log("123", recipe);
         selectedCards.forEach((card) => {
-            if (card.passed) {
-                let incA = card.inclination;
-                let incB = recipe.inclination;
-                totalWeight += this.produitScalaire(incA, incB);
-                console.log("129", totalWeight);
-            }
+            let incA = card.inclination;
+            let incB = recipe.inclination;
+            totalWeight += this.produitScalaire(incA, incB);
+
+            console.log("129", incA, incB, card, totalWeight);
         });
         //console.log("131", totalWeight);
         return totalWeight;
     }
 
     updateComboDots() {
-        for (let i = 1; i <= 3; i++) {
+        for (let i = 1; i <= 4; i++) {
             const dot = document.getElementById(`dot${i}`);
             dot.classList.toggle("active", i <= this.currentLevel);
         }
@@ -159,8 +171,21 @@ export class DebateGame {
         }
     }
 
+    // Fonction utilitaire pour obtenir la couleur de niveau
+    getLevelColor(level) {
+        switch (level) {
+            case 1:
+                return "linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%)";
+            case 2:
+                return "linear-gradient(135deg, #457b9d 0%, #335d7a 100%)";
+            case 3:
+                return "linear-gradient(135deg, #d63031 0%, #a02020 100%)";
+            default:
+                return "linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%)";
+        }
+    }
+
     renderActions() {
-        //console.log("renderActions");
         const panel = document.getElementById("action-panel");
         panel.innerHTML = "";
 
@@ -169,47 +194,121 @@ export class DebateGame {
 
         moves.forEach((move) => {
             const btn = document.createElement("button");
+
+            // Détermination de l'état du bouton
             const canUse =
                 (move.synth === true && this.p1.focus >= move.focus) ||
-                (move.level === 1 && this.p1.focus >= move.focus);
+                (move.level === 1 && this.p1.focus >= move.focus) ||
+                (move.level <= this.currentLevel && this.p1.focus >= move.focus);
 
+            // Classes CSS basées sur le niveau et l'état
             let levelClass = "";
             if (move.level === 2) levelClass = "level-2";
             if (move.level === 3) levelClass = "level-3";
+            //if (move.synth) levelClass += " special";
 
+            // Structure de base du bouton
             btn.innerHTML = `
-            <div>L${move.level} - ${move.label}</div>
-            <div style="font-size: 0.8em; opacity: 0.7;">
-                💥  ${move.baseDmg || move.dmg || 0} |
-                🎯 ${Math.round((move.precision || move.prec || 0) * 100)}% |
-                🧠 ${move.focus || 0}
-            </div>
-        `;
+    <div class="button-content">
+        <div class="button-main">
+            <span class="button-level">N${move.level}</span>
+            <span class="button-label">${move.label}</span>
+        </div>
+        <table class="button-stats-table">
+            <tr>
+                ${
+                    move.baseDmg || move.dmg || move.dmg === 0
+                        ? `
+                <td class="stat stat-dmg">
+                    <span class="stat-icon">💥</span>
+                    <span class="stat-value">${move.baseDmg || move.dmg || 0}</span>
+                </td>`
+                        : ""
+                }
+                <td class="stat stat-prec">
+                    <span class="stat-icon">🎯</span>
+                    <span class="stat-value">${Math.round((move.precision || move.prec || 0) * 100)}%</span>
+                </td>
+                <td class="stat stat-focus">
+                    <span class="stat-icon">🧠</span>
+                    <span class="stat-value">${move.focus || 0}</span>
+                </td>
+                ${
+                    move.weight
+                        ? `
+                <td class="stat stat-weight">
+                    <span class="stat-icon">⚖️</span>
+                    <span class="stat-value">${move.weight.toFixed(1)}</span>
+                </td>`
+                        : ""
+                }
+            </tr>
+        </table>
+    </div>
+`;
+
+            // Gestion visuelle selon l'état
+            if ((canUse && move.synth === true) || move.level <= 1) {
+                // Action synthétisée et utilisable: affiche l'image
+                btn.className = `action-btn unlocked ${levelClass}`;
+                if (move.image) {
+                    btn.style.backgroundImage = `url(${move.image})`;
+                    btn.style.backgroundSize = "cover";
+                    btn.style.backgroundPosition = "center";
+                    btn.classList.add("has-bg-image");
+                }
+                // Effet de survol: retourne au fond uni
+                btn.addEventListener("mouseenter", () => {
+                    btn.style.backgroundImage = "none";
+                    btn.style.background = this.getLevelColor(move.level);
+                });
+
+                btn.addEventListener("mouseleave", () => {
+                    if (move.image) {
+                        //console.log(move);
+                        btn.style.backgroundImage = `url(${move.image})`;
+                        btn.style.backgroundSize = "cover";
+                        btn.style.backgroundPosition = "center";
+                        btn.classList.add("has-bg-image");
+                    }
+                });
+            } else if (move.level <= this.currentLevel) {
+                // Action disponible mais non synthétisée: fond uni de niveau
+                btn.className = `action-btn ${levelClass}`;
+                btn.style.background = this.getLevelColor(move.level);
+                btn.style.opacity = "0.8";
+
+                // Effet de survol: légèrement plus clair
+                btn.addEventListener("mouseenter", () => {
+                    btn.style.opacity = "1";
+                    btn.style.transform = "scale(1.02)";
+                });
+
+                btn.addEventListener("mouseleave", () => {
+                    btn.style.opacity = "0.8";
+                    btn.style.transform = "scale(1)";
+                });
+            } else if (move.synth === false && move.level >= 2) {
+                // Action non disponible: fond uni atténué
+                btn.className = `action-btn ${levelClass} locked`;
+                btn.style.background = this.getLevelColor(move.level);
+                btn.style.opacity = "0.5";
+            }
 
             btn.disabled = !canUse || this.gameOver;
-            btn.className = canUse ? `unlocked ${levelClass}` : "";
-            //btn.onclick = () => this.handleMove(move);
+
+            // Gestion du clic
             btn.onclick = () => {
                 if (move.required) {
-                    //console.log("288", move);
-                    // || move.required != []
                     if (move.synth === true) {
                         this.handleMove(move);
-                        //move.synth = false;
-                    }
-
-                    // Si c'est une recette, vérifie si elle peut être craftée
-                    else if (this.canCraftWithSelected(move)) {
-                        this.performSynthesis(move.id);
+                    } else if (this.canCraftWithSelected(move)) {
                         this.log(`✨ Vous pouvez crafter ${move.label} !`, "#a29bfe");
                         this.handleMove(move);
                     } else {
                         this.log(`⚠️ Il manque des ingrédients pour ${move.label}.`, "#ff7675");
                     }
                 } else {
-                    // Si c'est une carte normale, ajoute-la au pool de craft
-                    //console.log(move);
-
                     this.handleMove(move);
                     renderCraftPool(this);
                 }
@@ -231,8 +330,7 @@ export class DebateGame {
 
         let quote = this.randElement(move.quotes);
         //console.log("Joueur quote : ", quote);
-
-        this.verbatim(`${doctrineInfo?.verbatimPrefix || ""}${quote}`);
+        const isPlayer = this.verbatim(`${doctrineInfo?.verbatimPrefix || ""}${quote}`, isPlayer);
     }
 
     logHeal(move, heal, doctrine) {
@@ -284,7 +382,7 @@ export class DebateGame {
             this.selectedInPool.splice(index, 1);
         }
         this.updateSynthesisResults();
-        //console.log("SelectedInPool", this.selectedInPool);
+        console.log("SelectedInPool", this.selectedInPool);
     }
 
     /**
@@ -316,7 +414,8 @@ export class DebateGame {
      * @param {string} recipeId - L'ID de la recette à synthétiser
      */
     performSynthesis(recipeId) {
-        const recipe = this.playerDoctrine.moves.find((m) => m.id === recipeId);
+        console.log("320", recipeId);
+        const recipe = this.p1.doctrine.moves.find((m) => m.id === recipeId);
         if (!recipe) {
             this.log("⚠️ Recette introuvable.", "#e63946");
             return;
@@ -329,14 +428,21 @@ export class DebateGame {
         }
 
         // Calcule le poids
-        const efficiency = this.calculateEfficiency(this.selectedInPool, recipe);
-
+        console.log("333", this.selectedInPool, recipe);
+        //const efficiency = this.calculateEfficiency(this.selectedInPool, recipe);
+        let efficiency = 0;
         // Consomme les cartes du pool
-        this.selectedInPool.forEach((card) => {
+        efficiency = this.calculateEfficiency(this.selectedInPool, recipe);
+        /*this.selectedInPool.forEach((card) => {
             const index = this.craftPool.findIndex((c) => c.id === card.id);
+            console.log("341", card, recipe);
+            efficiency += this.produitScalaire(card.inclination, recipe.inclination);
             if (index !== -1) {
                 this.craftPool.splice(index, 1);
             }
+        });*/
+        this.selectedInPool.forEach((card) => {
+            this.removeFromCraftPool(card.id);
         });
         this.selectedInPool = [];
 
@@ -349,6 +455,7 @@ export class DebateGame {
         recipe.weight = efficiency;
 
         this.log(`✨ Synthèse réussie: ${recipe.label} (Poids: ${efficiency.toFixed(1)})`, "#a29bfe");
+
         renderCraftPool(this);
         this.renderActions(this, this.handleMove.bind(this));
     }
@@ -434,7 +541,7 @@ export class DebateGame {
                 this.p2.aporie = 2;
                 this.log("🌀 Votre adversaire est plongé dans une Aporie philosophique !", "#a29bfe");
             }
-
+            animateAttack("p1", "p2");
             this.currentLevel = Math.min(3, move.level + 1);
             this.isCounter = false;
         } else {
@@ -445,6 +552,14 @@ export class DebateGame {
             // this.publicFav = Math.max(0, this.publicFav - 5);
             this.isCounter = false;
         }
+        /* const p2Card = document.getElementById('p2-card');
+    p2Card.classList.add('attacking');
+    setTimeout(() => p2Card.classList.remove('attacking'), 500);
+
+    const healthBar = document.getElementById('p2-health');
+    healthBar.classList.add('damaged');
+    healthBar.style.setProperty('--target-width', `${this.p1.health}%`);
+    setTimeout(() => healthBar.classList.remove('damaged'), 1000);*/
 
         this.updateComboDots();
         this.endTurn();
@@ -514,6 +629,12 @@ export class DebateGame {
         } else if (deltaPublicFav < 0) {
             this.log(`Vous perdez : ${-deltaPublicFav.toFixed(1)}% de faveur du public"`);
         }
+        this.updateUI();
+        this.updatePublicFavUI();
+        // Mise à jour de l'UI des seuils
+        //this.displayVictoryThresholds();
+        // Vérifier la victoire après la mise à jour
+        this.checkPublicVictory();
 
         renderGameUI(this);
     }
@@ -560,7 +681,7 @@ export class DebateGame {
                 this.log("🌀 L'adversaire est paralysé par l'Aporie !", "#ff7675");
                 this.p2.aporie--;
                 this.showTurnIndicator("p1");
-                this.turnCount++;
+                //this.turnCount++;
                 document.getElementById("turn-counter").textContent = `Tour: ${this.turnCount}`;
                 this.renderActions();
                 return;
@@ -618,6 +739,9 @@ export class DebateGame {
                     //console.warn(opponentDoctrineName, quote);
                     this.verbatim(`${opponentDoctrineName} : ${quote}`);
                     this.publicFavUpdate(incA, incB, 0, (res = 0));
+                    this.updatePublicFavUI();
+                    //this.updatePublicFavThresholds();
+                    this.checkPublicVictory();
                     this.isCounter = false;
                 } else {
                     this.log("⚡ Vous parez l'attaque ! Parade possible au prochain tour !", "cyan");
@@ -639,7 +763,11 @@ export class DebateGame {
                     let quote = this.randElement(move.quotes);
                     //console.log(opponentDoctrineName, quote);
                     this.verbatim(`${opponentDoctrineName} : ${quote}`);
+                    animateAttack("p2", "p1");
                     this.publicFavUpdate(incA, incB, dmg, (res = 0));
+                    this.updatePublicFavUI();
+                    //this.updatePublicFavThresholds();
+                    this.checkPublicVictory();
                     this.isCounter = false;
                 } else {
                     this.log("⚡ Vous parez l'attaque ! Parade possible au prochain tour !", "cyan");
@@ -653,7 +781,7 @@ export class DebateGame {
             this.p2.focus = Math.max(0, this.p2.focus - 5);
 
             this.showTurnIndicator("p1");
-            this.turnCount++;
+            //this.turnCount++;
             document.getElementById("turn-counter").textContent = `Tour: ${this.turnCount}`;
             this.updateUI();
             this.renderActions();
@@ -673,7 +801,62 @@ export class DebateGame {
         if (this.p1.aporie > 0) this.p1.aporie--;
         this.updateUI();
         this.checkWin();
-        if (!this.gameOver) this.opponentTurn();
+        if (!this.gameOver) {
+            //this.turnCount++;
+            this.updatePublicFavUI();
+            this.checkPublicVictory();
+            this.opponentTurn();
+        }
+    }
+
+    /**
+     * Affiche les seuils de victoire actuels
+     */
+
+    updatePublicFavUI() {
+        // Calcul des seuils dynamiques
+        const victoryThreshold = Math.max(20, 100 - this.turnCount);
+        const defeatThreshold = Math.min(80, this.turnCount);
+
+        // Mise à jour des variables CSS
+        document.documentElement.style.setProperty("--victory-threshold", `${victoryThreshold}%`);
+        document.documentElement.style.setProperty("--defeat-threshold", `${defeatThreshold}%`);
+        document.documentElement.style.setProperty("--current-fav", `${this.publicFav}%`);
+
+        // Mise à jour des marqueurs dans le bon conteneur
+        const gaugeContainer = document.getElementById("public-fav-container");
+        if (gaugeContainer) {
+            // Supprime tous les anciens marqueurs
+            const oldMarkers = gaugeContainer.querySelectorAll(".public-threshold-marker");
+            oldMarkers.forEach((marker) => marker.remove());
+
+            // Ajoute les nouveaux marqueurs
+            const victoryMarker = document.createElement("div");
+            victoryMarker.className = "public-threshold-marker victory";
+            victoryMarker.style.left = `${victoryThreshold}%`;
+            gaugeContainer.appendChild(victoryMarker);
+
+            const defeatMarker = document.createElement("div");
+            defeatMarker.className = "public-threshold-marker defeat";
+            defeatMarker.style.right = `${defeatThreshold}%`;
+            gaugeContainer.appendChild(defeatMarker);
+        }
+
+        // Mise à jour de l'affichage des seuils
+        this.displayThresholds(victoryThreshold, defeatThreshold);
+    }
+
+    displayThresholds(victoryThreshold, defeatThreshold) {
+        const thresholdsElement = document.getElementById("public-thresholds");
+        if (thresholdsElement) {
+            thresholdsElement.innerHTML = `
+            <div class="threshold-info">
+                <span class="victory">🏆 Victoire: ${victoryThreshold}%</span>
+                <span class="defeat">⚠️ Défaite: ${defeatThreshold}%</span>
+                <span class="current">👥 Actuel: ${Math.round(this.publicFav)}%</span>
+            </div>
+        `;
+        }
     }
 
     updateUI() {
@@ -686,7 +869,9 @@ export class DebateGame {
         document.getElementById("p1-focus").style.width = this.p1.focus + "%";
         document.getElementById("p2-health").style.width = this.p2.health + "%";
         document.getElementById("p2-focus").style.width = this.p2.focus + "%";
-        document.getElementById("public-fav").style.width = this.publicFav + "%";
+        //document.getElementById("gauge-container").style.width = 100 + "%";
+        document.getElementById("public-fav-fill").style.width = this.publicFav + "%";
+        //document.getElementById("gauge-container").style.width = 100 + "%";
 
         document.getElementById("p1-health-val").textContent = Math.round(this.p1.health);
         document.getElementById("p1-focus-val").textContent = Math.round(this.p1.focus);
@@ -750,6 +935,24 @@ export class DebateGame {
         }
     }
 
+    /**
+     * Vérifie si un joueur remporte la victoire par la faveur publique
+     * @returns {boolean} True si victoire, false sinon
+     */
+    checkPublicVictory() {
+        const playerThreshold = 100 - this.turnCount; // Seuil décroissant pour le joueur
+        const opponentThreshold = this.turnCount; // Seuil croissant pour l'adversaire
+
+        if (this.publicFav >= playerThreshold) {
+            this.endGame(`${this.p1.name} remporte le débat par la faveur publique !`, "public");
+            return true;
+        } else if (this.publicFav <= opponentThreshold) {
+            this.endGame(`${this.p2.name} remporte le débat par la faveur publique !`, "public");
+            return true;
+        }
+        return false;
+    }
+
     checkWin() {
         const victory = this.p1.health > 0;
         if (this.p1.health <= 0 || this.p2.health <= 0) {
@@ -780,6 +983,36 @@ export class DebateGame {
             screen.style.display = "flex";
             this.log(victory ? "🎉 VICTOIRE PHILOSOPHIQUE !" : "💔 Défaite...", victory ? "#ffb703" : "#e63946");
         }
+    }
+
+    endGame() {
+        const victory = this.checkWin();
+        this.gameOver = true;
+
+        const screen = document.getElementById("victory-screen");
+        const title = document.getElementById("victory-title");
+        const stats = document.getElementById("victory-stats");
+        let msg = "";
+        if (victory) {
+            msg = this.randElement(this.p1.doctrine.victoryMessages);
+            title.textContent = msg;
+            title.style.color = "#FFD700";
+        } else {
+            msg = this.randElement(this.p1.doctrine.defeatMessages);
+            title.textContent = msg;
+            title.style.color = "#FF0000";
+        }
+
+        stats.innerHTML = `
+            <div><strong>Tours écoulés:</strong> ${this.turnCount}</div>
+            <div><strong>Arguments réussis:</strong> ${this.argumentsSuccessful}</div>
+            <div><strong>Dégâts totaux infligés:</strong> ${this.damageDealt}</div>
+            <div><strong>Faveur finale de l'auditoire:</strong> ${Math.round(this.publicFav)}%</div>
+            <div><strong>Votre vitalité restante:</strong> ${Math.round(this.p1.health)}</div>
+        `;
+
+        screen.style.display = "flex";
+        this.log(victory ? "🎉 VICTOIRE PHILOSOPHIQUE !" : "💔 Défaite...", victory ? "#ffb703" : "#e63946");
     }
 
     addSpecialAbilityButtons(panel) {
