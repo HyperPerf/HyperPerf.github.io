@@ -802,7 +802,7 @@ export class DebateGame {
         this.updateUI();
         this.checkWin();
         if (!this.gameOver) {
-            //this.turnCount++;
+            this.turnCount++;
             this.updatePublicFavUI();
             this.checkPublicVictory();
             this.opponentTurn();
