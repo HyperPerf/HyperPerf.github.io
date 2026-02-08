@@ -182,6 +182,19 @@ export const MARXIST_INCLINATION = {
     collectivisme: 0.9,
     individualisme: 0.3
 };
+export const EXISTENTIALIST_INCLINATION = {
+    rationalite: 0.5,
+    emotion: 0.4,
+    intuition: 0.5,
+    collectivisme: 0.7,
+    individualisme: 0.8,
+    liberte: 0.9, // Liberté radicale
+    angoisse: 0.8, // Anxiété existentielle
+    absurdite: 0.9, // Absurdité de l'existence
+    authenticite: 0.85,
+    responsabilite: 0.7,
+    desespoir: 0.3 // Peut être surmonté
+};
 
 export const PUBLIC = { inclination: ductiliteRhetorique };
 
@@ -216,6 +229,7 @@ export const STOIC_MOVES = [
             collectivisme: 0.5,
             individualisme: 0.8
         },
+        image: "../images/conscience-31.png", // Image pour niveau 1
         weight: 0
     },
 
@@ -241,6 +255,7 @@ export const STOIC_MOVES = [
             collectivisme: 0.4,
             individualisme: 0.3
         },
+        image: "../images/artiste-16.png",
         weight: 0
     },
     {
@@ -265,6 +280,7 @@ export const STOIC_MOVES = [
             collectivisme: 0.8,
             individualisme: 0.6
         },
+        image: "../images/potion-of-heal-2.webp",
         weight: 0
     },
     {
@@ -289,6 +305,7 @@ export const STOIC_MOVES = [
             collectivisme: 0.1,
             individualisme: 0.9
         },
+        image: "../images/tour-ivoire-04.png", 
         weight: 0
     },
 
@@ -315,6 +332,7 @@ export const STOIC_MOVES = [
             collectivisme: 0.3,
             individualisme: 0.8
         },
+        image: "../images/split-4.png", 
         weight: 0,
         required: ["citadelle", "dichotomie"],
         synth: false
@@ -341,6 +359,7 @@ export const STOIC_MOVES = [
             collectivisme: 0.4,
             individualisme: 0.7
         },
+        image: "../images/split.png",
         weight: 0,
         required: ["dichotomie", "pneuma"],
         synth: false
@@ -367,6 +386,7 @@ export const STOIC_MOVES = [
             collectivisme: 0.9,
             individualisme: 0.5
         },
+        image: "../images/secret-6.png",
         weight: 0,
         required: ["pneuma", "nature"],
         synth: false
@@ -393,6 +413,7 @@ export const STOIC_MOVES = [
             collectivisme: 0.6,
             individualisme: 0.7
         },
+        image: "../images/plenipotentiary-grim-reaper.png",
         weight: 0,
         required: ["pneuma", "dichotomie"],
         synth: false
@@ -421,6 +442,7 @@ export const STOIC_MOVES = [
             collectivisme: 0.5,
             individualisme: 0.8
         },
+        image: "../images/psychose-6.webp",
         weight: 0,
         required: ["indifferents", "porte"],
         synth: false
@@ -447,6 +469,7 @@ export const STOIC_MOVES = [
             collectivisme: 0.3,
             individualisme: 0.8
         },
+        image: "../images/mechant.png",
         weight: 0,
         required: ["indifferents", "brieve"],
         synth: false
@@ -473,6 +496,7 @@ export const STOIC_MOVES = [
             collectivisme: 0.3,
             individualisme: 0.7
         },
+        image: "../images/smoke-rings-3.png",
         weight: 0,
         required: ["sympathie", "brieve"],
         synth: false
@@ -1639,6 +1663,154 @@ export const MARXIST_MOVES = [
         weight: 0
     }
 ];
+
+export const EXISTENTIALIST_MOVES = [
+    // Niveau 1
+    {
+        id: "angoisse",
+        label: "Angoisse Existentielle",
+        level: 1,
+        baseDmg: 14,
+        precision: 0.85,
+        focus: 7,
+        quotes: [
+            "« L'angoisse est le vertige de la liberté » — Kierkegaard",
+            "« Nous sommes une passion inutile » — Sartre",
+            "« L'homme est un dieu en ruine » — Pascal (adapté)",
+            "« La liberté nous condamne à l'angoisse » — Beauvoir",
+            "« Le néant nous guette à chaque choix » — Camus"
+        ],
+        gameplay:
+            "Inflige des dégâts et augmente votre angoisse (effet cumulatif). +5% de dégâts par niveau d'angoisse."
+    },
+    {
+        id: "revolte",
+        label: "Révolte Absurde",
+        level: 1,
+        baseDmg: 12,
+        precision: 0.9,
+        focus: 5,
+        quotes: [
+            "« Je me révolte, donc nous sommes » — Camus",
+            "« La révolte donne un sens à la vie » — Camus",
+            "« Refuser l'oppression, c'est affirmer sa liberté » — Sartre",
+            "« La révolte est la noblesse de l'homme » — Unamuno",
+            "« Se révolter, c'est dire non au destin » — Jaspers"
+        ],
+        gameplay:
+            "Dégâts modérés mais réduit l'angoisse adverse de 10%. +15% de précision si vous avez subis des dégâts ce tour."
+    },
+    {
+        id: "projet",
+        label: "Projet Authentique",
+        level: 1,
+        baseDmg: 0,
+        precision: 1, // Toujours réussi
+        focus: 10,
+        heal: 8,
+        quotes: [
+            "« L'existence précède l'essence » — Sartre",
+            "« Nous sommes ce que nous faisons » — Sartre",
+            "« Choisir son projet, c'est se choisir soi-même » — Beauvoir",
+            "« L'homme se définit par ses actes » — Merleau-Ponty",
+            "« Notre vie est ce que nous en faisons » — Camus"
+        ],
+        gameplay: "Soigne et prépare un projet pour le tour suivant. Le prochain argument infligera +20% de dégâts."
+    },
+    {
+        id: "mauvaise_foi",
+        label: "Mauvaise Foi",
+        level: 1,
+        baseDmg: 18,
+        precision: 0.7,
+        focus: 8,
+        quotes: [
+            "« La mauvaise foi est un mensonge à soi-même » — Sartre",
+            "« Se voiler la vérité pour éviter l'angoisse » — Kierkegaard",
+            "« Fuir sa liberté, c'est fuir son humanité » — Beauvoir",
+            "« La mauvaise foi est une fuite » — Sartre",
+            "« Se mentir pour éviter la responsabilité » — Jaspers"
+        ],
+        gameplay:
+            "Dégâts élevés mais réduit votre lucidité de 15%. Peut infliger 'Désorientation' à l'adversaire (20% de chance)."
+    },
+
+    // Niveau 2
+    {
+        id: "absurdite",
+        label: "Embrasser l'Absurdité",
+        level: 2,
+        baseDmg: 25,
+        precision: 0.8,
+        focus: 12,
+        required: ["angoisse", "revolte"],
+        quotes: [
+            "« Il faut imaginer Sisyphe heureux » — Camus",
+            "« L'absurdité est la lucidité ultime » — Camus",
+            "« Vivre l'absurde, c'est vivre pleinement » — Jaspers",
+            "« L'absurde naît de la confrontation entre l'appel humain et le silence déraisonnable du monde » — Camus",
+            "« Accepter l'absurde, c'est refuser l'espoir » — Camus"
+        ],
+        gameplay:
+            "Inflige des dégâts proportionnels à votre niveau d'angoisse. +10% de dégâts par niveau d'angoisse cumulé."
+    },
+    {
+        id: "liberte_radicale",
+        label: "Liberté Radicale",
+        level: 2,
+        baseDmg: 20,
+        precision: 0.9,
+        focus: 10,
+        required: ["projet", "revolte"],
+        quotes: [
+            "« L'homme est condamné à être libre » — Sartre",
+            "« Notre liberté nous écrase de son poids » — Beauvoir",
+            "« La liberté est un fardeau glorieux » — Kierkegaard",
+            "« Être libre, c'est être responsable » — Sartre",
+            "« La liberté est angoissante car elle nous rend responsables » — Beauvoir"
+        ],
+        gameplay: "Ignore les effets adverses ce tour. +30% de dégâts si vous avez moins de 50% de lucidité."
+    },
+    {
+        id: "desespoir_actif",
+        label: "Désespoir Actif",
+        level: 2,
+        baseDmg: 30,
+        precision: 0.75,
+        focus: 15,
+        required: ["angoisse", "mauvaise_foi"],
+        quotes: [
+            "« Le désespoir est une force quand il est lucide » — Camus",
+            "« Il n'y a qu'un problème philosophique vraiment sérieux : le suicide » — Camus",
+            "« Le désespoir est la santé de l'âme » — Unamuno",
+            "« Le désespoir authentique mène à l'action » — Kierkegaard",
+            "« Quand tout est absurde, tout est possible » — Camus"
+        ],
+        gameplay:
+            "Dégâts massifs mais réduit votre lucidité de 20%. 50% de chance d'infliger 'Désespoir' à l'adversaire (réduit ses dégâts de 15% pendant 2 tours)."
+    },
+
+    // Niveau 3
+    {
+        id: "transcendance_absurde",
+        label: "Transcendance de l'Absurde",
+        level: 3,
+        baseDmg: 40,
+        precision: 0.85,
+        focus: 20,
+        required: ["absurdite", "liberte_radicale"],
+        quotes: [
+            "« La lutte vers les sommets suffit à remplir un cœur d'homme » — Camus",
+            "« L'absurde est la liberté lucide » — Camus",
+            "« Transcender l'absurde, c'est créer sa propre valeur » — Sartre",
+            "« Dans l'absurdité, nous trouvons notre grandeur » — Camus",
+            "« La révolte donne un sens à l'absurde » — Camus"
+        ],
+        gameplay:
+            "Inflige des dégâts proportionnels à votre lucidité restante. +50% de dégâts si vous avez moins de 30% de lucidité. Élimine toute angoisse accumulée."
+    }
+];
+
 // Doctrines
 export const DOCTRINES = {
     stoic: {
@@ -1672,7 +1844,8 @@ export const DOCTRINES = {
         moves: STOIC_MOVES,
         inclination: STOIC_INCLINATION,
         healthLabel: "Vitalité",
-        focusLabel: "Concentration"
+        focusLabel: "Concentration",
+        rgb: { r: 150, g: 150, b: 150 }
     },
     epicurean: {
         id: "epicurean",
@@ -1706,7 +1879,8 @@ export const DOCTRINES = {
         moves: EPICUR_MOVES,
         inclination: EPICUR_INCLINATION,
         healthLabel: "Équilibre",
-        focusLabel: "Plaisir"
+        focusLabel: "Plaisir",
+        rgb: { r: 150, g: 150, b: 150 }
     },
     buddhist: {
         id: "buddhist",
@@ -1741,7 +1915,8 @@ export const DOCTRINES = {
         moves: BUDDHIST_MOVES,
         inclination: BUDDHIST_INCLINATION,
         healthLabel: "Équanimité",
-        focusLabel: "Méditation"
+        focusLabel: "Méditation",
+        rgb: { r: 150, g: 150, b: 150 }
     },
     cynic: {
         id: "cynic",
@@ -1775,7 +1950,8 @@ export const DOCTRINES = {
         moves: CYNIC_MOVES,
         inclination: CYNIC_INCLINATION,
         healthLabel: "Audace",
-        focusLabel: "Provocation"
+        focusLabel: "Provocation",
+        rgb: { r: 150, g: 150, b: 150 }
     },
     nihilist: {
         id: "nihilist",
@@ -1810,7 +1986,8 @@ export const DOCTRINES = {
         moves: NIHILIST_MOVES,
         inclination: NIHILIST_INCLINATION,
         healthLabel: "Néant",
-        focusLabel: "Causalité"
+        focusLabel: "Causalité",
+        rgb: { r: 150, g: 150, b: 150 }
     },
     marxist: {
         id: "marxist",
@@ -1861,6 +2038,46 @@ export const DOCTRINES = {
         moves: MARXIST_MOVES,
         inclination: MARXIST_INCLINATION,
         healthLabel: "Conscience",
-        focusLabel: "Praxis"
+        focusLabel: "Praxis",
+        rgb: { r: 150, g: 150, b: 150 }
+    },
+    existentialist: {
+        id: "existentialist",
+        color: "#6a0572", // Violet profond pour évoquer l'angoisse et la profondeur
+        icon: "🎭",
+        name: "Existentialiste",
+        description:
+            "Affrontez l'absurdité de l'existence en créant votre propre sens. L'angoisse et la liberté sont vos armes contre le néant.",
+        descriptionQuote: "« L'homme est condamné à être libre » — Jean-Paul Sartre",
+        descriptionEnemy: "Votre adversaire exploitera l'absurdité et la liberté radicale pour vous déstabiliser.",
+
+        logMessage: (move, dmg) =>
+            `🎭 ${move.label} : ${move.quotes[Math.floor(Math.random() * move.quotes.length)]} (${dmg} — Absurdité: +${Math.floor(dmg / 3)})`,
+        opponentLogMessage: (name, move, dmg) =>
+            `⚔️ ${name} utilise ${move.label} ! ${move.quotes[Math.floor(Math.random() * move.quotes.length)]} (Dégâts existentiels: ${dmg})`,
+        healLogMessage: (move, heal) =>
+            `💖 ${move.label} : ${move.quotes[Math.floor(Math.random() * move.quotes.length)]} (Renaissance: +${heal})`,
+        verbatimPrefix: "Existentialiste : ",
+
+        victoryMessages: [
+            "🎭 **TRIOMPHE EXISTENTIEL** : *Vous avez créé votre propre sens dans l'absurdité. La liberté a vaincu le néant.* 🎭",
+            "🎭 **AUTHENTICITÉ ATTEINTE** : *En assumant votre liberté, vous avez transcendé la mauvaise foi.* 🎭",
+            "🎭 **RÉVOLTE VICTORIEUSE** : *Votre refus de l'absurde a forgé une victoire authentique.* 🎭",
+            "🎭 **ANGOISSE TRANSCENDÉE** : *L'angoisse de la liberté s'est transformée en puissance créatrice.* 🎭",
+            "🎭 **PROJET RÉUSSI** : *Votre engagement total a donné un sens à ce combat.* 🎭"
+        ],
+
+        defeatMessages: [
+            "💀 **DÉFAITE EXISTENTIELLE** : *Le néant vous a englouti. Mais même dans la défaite, vous restez libre.* 💀",
+            "💀 **MAUVAISE FOI** : *Vous avez fui votre liberté. L'inauthenticité vous a coûté la victoire.* 💀",
+            "💀 **ABANDON DU PROJET** : *Sans engagement, l'absurdité triomphe. Mais le choix reste vôtre.* 💀",
+            "💀 **ÉCHEC DE L'AUTHENTICITÉ** : *Vous avez laissé les autres définir votre destin.* 💀",
+            "💀 **ANGOISSE PARALYSANTE** : *La liberté vous a terrassé. Mais c'est encore un choix.* 💀"
+        ],
+        moves: EXISTENTIALIST_MOVES,
+        inclination: EXISTENTIALIST_INCLINATION,
+
+        healthLabel: "Volonté", // Remplace "Vitalité"
+        focusLabel: "Lucidité" // Remplace "Concentration"
     }
 };
