@@ -9,13 +9,22 @@
     --health-color: #2a9d8f;
     --focus-color: #457b9d;
     --gold: #ffb703;
-    --public-color: #a29bfe;
     --stoic-color: #2a9d8f;
     --epicurean-color: #457b9d;
     --buddhist-color: #ffb703;
     --cynic-color: #d4a574;
     --nihilist-color: #800020;
     --marxist-color: #d62828;
+    --danger: #e63946; /* Rouge pour la zone de défaite */
+    --warning: #f39c12; /* Orange pour la zone de débat */
+    --success: #2a9d8f; /* Vert pour la zone de victoire */
+    --public-color: #a29bfe; /* Violet pour la barre de remplissage */
+    --player-color: #3ad7e1;
+    --enemy-color: #e78889;
+    --defeat-color: #ffffff;
+    --victory-color: #ffffff;
+    /* Ajouter à :root */
+    --parchment: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23f5f5dc" opacity="0.1"/><path d="M0,0 L100,0 L95,5 L5,5 Z" fill="%23d4c4a8" opacity="0.2"/><path d="M0,100 L100,100 L95,95 L5,95 Z" fill="%23d4c4a8" opacity="0.2"/></svg>');
 }
 
 /* ===================================
@@ -29,7 +38,6 @@
 
 body {
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #0a0a0b 0%, #1a1a2e 100%);
     color: var(--text-color);
     min-height: 100vh;
     display: flex;
@@ -57,8 +65,12 @@ h1 {
    ANIMATIONS
    =================================== */
 @keyframes glow {
-    from { filter: drop-shadow(0 0 5px rgba(230, 57, 70, 0.5)); }
-    to { filter: drop-shadow(0 0 20px rgba(230, 57, 70, 0.8)); }
+    from {
+        filter: drop-shadow(0 0 5px rgba(230, 57, 70, 0.5));
+    }
+    to {
+        filter: drop-shadow(0 0 20px rgba(230, 57, 70, 0.8));
+    }
 }
 
 @keyframes fadeIn {
@@ -73,7 +85,8 @@ h1 {
 }
 
 @keyframes pulse {
-    0%, 100% {
+    0%,
+    100% {
         transform: scale(1);
         opacity: 0.5;
     }
@@ -84,8 +97,12 @@ h1 {
 }
 
 @keyframes shimmer {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
 }
 
 @keyframes slideIn {
@@ -100,8 +117,13 @@ h1 {
 }
 
 @keyframes shake {
-    0%, 100% { transform: rotate(-2deg); }
-    50% { transform: rotate(2deg); }
+    0%,
+    100% {
+        transform: rotate(-2deg);
+    }
+    50% {
+        transform: rotate(2deg);
+    }
 }
 
 @keyframes damageFloat {
@@ -120,11 +142,34 @@ h1 {
    =================================== */
 #game-container {
     width: 100%;
-    max-width: 1200px;
+    max-width: 1600px; /* Augmente la largeur max pour accueillir 3 colonnes */
     display: none;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr; /* 3 colonnes : joueur / centre (logs, actions) / craft */
     gap: 20px;
     animation: fadeIn 0.5s ease-in;
+}
+#p1-card,
+#log {
+    grid-column: 1;
+}
+#action-panel {
+    grid-column: span 2;
+}
+
+#status-header,
+#verbatim {
+    grid-column: 2;
+}
+
+#craft-pool {
+    grid-column: 3;
+    grid-row: 2 / span 4; /* Occupe toute la hauteur disponible */
+    background: rgba(26, 26, 46, 0.3);
+    border-radius: 15px;
+    padding: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.2);
+    max-height: 100vh;
 }
 
 #setup-screen {
@@ -210,7 +255,7 @@ h1 {
     grid-column: span 2;
     text-align: center;
     background: linear-gradient(135deg, rgba(162, 155, 254, 0.1), rgba(162, 155, 254, 0.05));
-    padding: 20px;
+    padding: 10px;
     border-radius: 15px;
     border: 2px solid var(--public-color);
     box-shadow: 0 0 20px rgba(162, 155, 254, 0.2);
@@ -223,8 +268,8 @@ h1 {
     position: absolute;
     top: -50%;
     left: -50%;
-    width: 200%;
-    height: 200%;
+    width: 100%;
+    height: 100%;
     background: radial-gradient(circle, rgba(162, 155, 254, 0.1) 0%, transparent 70%);
     animation: pulse 3s ease-in-out infinite;
 }
@@ -241,16 +286,18 @@ h1 {
    STATUS & GAUGES
    =================================== */
 .status-header {
-    grid-column: span 2;
+    grid-column: 3;
     display: flex;
     justify-content: space-between;
     align-items: center;
     color: var(--gold);
     font-weight: bold;
+    font-size: 1.5em;
     padding: 15px;
     background: rgba(255, 183, 3, 0.1);
     border-radius: 10px;
     border: 1px solid rgba(255, 183, 3, 0.3);
+    gap: 30px;
 }
 
 .stat-label {
@@ -272,7 +319,8 @@ h1 {
     box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
 }
 
-.gauge-fill {
+.gauge-fill,
+.gauge-thresholds {
     height: 100%;
     transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
@@ -375,10 +423,13 @@ h1 {
     background: rgba(255, 255, 255, 0.03);
     border-radius: 15px;
     border: 1px solid rgba(255, 255, 255, 0.1);
+    background-size: 100% 100%; /* Étire l'image pour remplir la carte */
+    background-position: center; /* Centre l'image */
+    background-repeat: no-repeat; /* Empêche la répétition */
 }
 
-button {
-    padding: 12px 18px;
+button, .controls button, .craft button, .synthesis button {
+    padding: 6px 9px;
     cursor: pointer;
     background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
     color: #999;
@@ -391,7 +442,7 @@ button {
     overflow: hidden;
 }
 
-button::before {
+button::before, .controls button::before {
     content: "";
     position: absolute;
     top: 50%;
@@ -401,33 +452,35 @@ button::before {
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.1);
     transform: translate(-50%, -50%);
-    transition: width 0.6s, height 0.6s;
+    transition:
+        width 0.6s,
+        height 0.6s;
 }
 
-button:hover::before {
+.controls button:hover::before , button:hover::before {
     width: 300px;
     height: 300px;
 }
 
-button:hover:not(:disabled) {
+.controls button:hover:not(:disabled), button:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
-button:disabled {
+.controls button:disabled, button:disabled  {
     opacity: 0.3;
     cursor: not-allowed;
     transform: none;
 }
 
-button.unlocked {
-    background: linear-gradient(135deg, var(--accent-color) 0%, #c62a36 100%);
+.controls button.unlocked, button.unlocked {
+    /*background: linear-gradient(135deg, var(--accent-color) 0%, #c62a36 100%);*/
     color: white;
     border-color: rgba(255, 255, 255, 0.3);
     box-shadow: 0 0 15px rgba(230, 57, 70, 0.3);
 }
 
-button.unlocked:hover:not(:disabled) {
+.controls button.unlocked:hover:not(:disabled), button.unlocked:hover:not(:disabled) {
     box-shadow: 0 0 25px rgba(230, 57, 70, 0.5);
 }
 
@@ -479,11 +532,9 @@ button.special {
 
 /* Craft Section Container */
 .craft-section {
-    margin: 16px 0;
-    padding: 16px;
+    margin: 0 0;
     background: rgba(0, 0, 0, 0.05);
     border-radius: 8px;
-    border: 1px solid #e0e0e0;
 }
 
 /* Pool Cards Container */
@@ -496,16 +547,21 @@ button.special {
 
 /* Individual Pool Card */
 .pool-card {
-    width: 100px;
+    color: rgb(0, 0, 0);
+    width: 20%;
     height: 120px;
-    background: #163f64;
-    border: 2px solid #dee2e6;
+    /*background-image: url(../images/maslow-5.png);*/
+    background-size: 100% 100%; /* Étire l'image pour remplir la carte */
+    background-position: center; /* Centre l'image */
+    background-repeat: no-repeat; /* Empêche la répétition */
+    border: 1px solid #dee2e6;
     border-radius: 6px;
     display: flex;
     flex-direction: column;
     position: relative;
     cursor: pointer;
     transition: all 0.2s ease;
+    margin-top: 10px;
 }
 
 .pool-card:hover {
@@ -513,7 +569,7 @@ button.special {
 }
 
 .pool-card.selected {
-    border-color: #007bff;
+    border-color: #000000;
     background-color: #001d3a;
     transform: scale(1.05);
     box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.3);
@@ -529,32 +585,32 @@ button.special {
 }
 
 .pool-card .card-icon {
-    font-size: 24px;
+    font-size: 0;
     margin-bottom: 4px;
 }
 
 .pool-card .card-name {
-    font-size: 12px;
+    font-size: 15px;
     text-align: center;
     font-weight: bold;
     margin-bottom: 4px;
 }
 
 .pool-card .card-level {
-    font-size: 10px;
-    color: #ff6d6d;
+    font-size: 15px;
+    color: var(--gold);
 }
 
 .pool-card .remove-btn {
     position: absolute;
     top: 4px;
     right: 4px;
-    background: #dc3545;
-    color: white;
+    background: #350005;
+    color: #fffefe;
     border: none;
     border-radius: 50%;
-    width: 20px;
-    height: 20px;
+    width: 0;
+    height: 0;
     font-size: 12px;
     cursor: pointer;
     display: flex;
@@ -572,6 +628,7 @@ button.special {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+
     margin-bottom: 20px;
     padding: 12px;
     background: rgba(0, 0, 0, 0.05);
@@ -579,7 +636,7 @@ button.special {
 }
 
 .card {
-    width: 120px;
+    /*width: 120px;*/
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -622,14 +679,13 @@ button.special {
 }
 
 .synthesis-card {
-    width: 200px;
-    padding: 12px;
+    width: 48%;
+    padding: 8px;
     background: #113725;
-    border: 1px solid #002607;
+    border: 1px solid rgb(43, 84, 51);
     border-radius: 6px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
     transition: all 0.2s ease;
 }
 
@@ -659,7 +715,7 @@ button.special {
 
 .synthesis-card .recipe-level {
     font-size: 12px;
-    color: #6c757d;
+    color: #fdff95;
 }
 
 .synthesis-card .recipe-ingredients {
@@ -667,6 +723,7 @@ button.special {
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
+    max-width: fit-content;
 }
 
 .synthesis-card .craft-btn {
@@ -749,7 +806,9 @@ button.special {
     padding: 20px;
     width: 300px;
     cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
@@ -782,37 +841,49 @@ button.special {
 }
 
 /* Doctrine-specific styles */
-.stoic-card { border-top: 3px solid var(--stoic-color); }
+.stoic-card {
+    border-top: 3px solid var(--stoic-color);
+}
 .stoic-card.selected {
     border-color: var(--stoic-color);
     box-shadow: 0 0 25px rgba(42, 157, 143, 0.7);
 }
 
-.epicurean-card { border-top: 3px solid var(--epicurean-color); }
+.epicurean-card {
+    border-top: 3px solid var(--epicurean-color);
+}
 .epicurean-card.selected {
     border-color: var(--epicurean-color);
     box-shadow: 0 0 25px rgba(69, 123, 157, 0.7);
 }
 
-.buddhist-card { border-top: 3px solid var(--buddhist-color); }
+.buddhist-card {
+    border-top: 3px solid var(--buddhist-color);
+}
 .buddhist-card.selected {
     border-color: var(--buddhist-color);
     box-shadow: 0 0 25px rgba(255, 183, 3, 0.7);
 }
 
-.cynic-card { border-top: 3px solid var(--cynic-color); }
+.cynic-card {
+    border-top: 3px solid var(--cynic-color);
+}
 .cynic-card.selected {
     border-color: var(--cynic-color);
     box-shadow: 0 0 25px rgba(212, 165, 116, 0.7);
 }
 
-.nihilist-card { border-top: 3px solid var(--nihilist-color); }
+.nihilist-card {
+    border-top: 3px solid var(--nihilist-color);
+}
 .nihilist-card.selected {
     border-color: var(--nihilist-color);
     box-shadow: 0 0 25px rgba(128, 0, 32, 0.7);
 }
 
-.marxist-card { border-top: 3px solid var(--marxist-color); }
+.marxist-card {
+    border-top: 3px solid var(--marxist-color);
+}
 .marxist-card.selected {
     border-color: var(--marxist-color);
     box-shadow: 0 0 25px rgba(214, 40, 40, 0.7);
@@ -857,13 +928,86 @@ button.special {
     line-height: 2;
 }
 
+/* Style pour le tableau des statistiques des boutons */
+.button-stats-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 1.3em;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+}
+
+.button-stats-table tr {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
+
+.button-stats-table td {
+    flex: 1;
+    text-align: center;
+    padding: 3px 0;
+    min-width: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.button-stats-table .stat-icon {
+    font-size: 1em;
+    margin-bottom: 2px;
+}
+
+.button-stats-table .stat-value {
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+/* Styles spécifiques pour chaque type de stat */
+.button-stats-table .stat-dmg {
+    color: #e63946;
+}
+
+.button-stats-table .stat-prec {
+    color: #ffffff;
+}
+
+.button-stats-table .stat-focus {
+    color: #89d1ff;
+}
+
+.button-stats-table .stat-weight {
+    color: #ffb703;
+}
+
+/* Effet de survol pour mettre en valeur les stats */
+.button-stats-table td:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+}
+
+/* Bordure subtile entre les stats */
+.button-stats-table td:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 5px;
+    bottom: 5px;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+
 /* ===================================
    DAMAGE POPUP
    =================================== */
 .damage-popup {
     position: fixed;
-    font-size: 2em;
+    font-size: 5em;
     font-weight: bold;
+    border: 5px;
     pointer-events: none;
     z-index: 1000;
     animation: damageFloat 1s ease-out forwards;
@@ -889,4 +1033,442 @@ button.special {
         flex-direction: column;
         align-items: center;
     }
+}
+
+body {
+    background: linear-gradient(135deg, #0a0a0b 0%, #1a1a2e 100%), var(--parchment);
+    background-attachment: fixed;
+    position: relative;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 10% 20%, rgba(162, 155, 254, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 90% 80%, rgba(255, 183, 3, 0.03) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Ajouter des particules de poussière */
+.dust-particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+    overflow: hidden;
+}
+
+.dust {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: float linear infinite;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.5;
+    }
+    90% {
+        opacity: 0.5;
+    }
+    100% {
+        transform: translateY(-1000px) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* Ajouter aux cartes de doctrine */
+.doctrine-card::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    border-radius: 15px;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.doctrine-card::before {
+    background: radial-gradient(circle at center, rgba(42, 157, 143, 0.2) 0%, transparent 70%);
+}
+
+.epicurean-card::before {
+    background: radial-gradient(circle at center, rgba(69, 123, 157, 0.2) 0%, transparent 70%);
+}
+
+.buddhist-card::before {
+    background: radial-gradient(circle at center, rgba(255, 183, 3, 0.2) 0%, transparent 70%);
+}
+
+.cynic-card::before {
+    background: radial-gradient(circle at center, rgba(212, 165, 116, 0.2) 0%, transparent 70%);
+}
+
+.nihilist-card::before {
+    background: radial-gradient(circle at center, rgba(128, 0, 32, 0.2) 0%, transparent 70%);
+}
+
+.doctrine-card:hover::before {
+    opacity: 1;
+}
+
+/* Ajouter au CSS */
+[data-tooltip] {
+    position: relative;
+    cursor: help;
+}
+
+[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.8em;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    z-index: 100;
+    width: 200px;
+    text-align: center;
+    line-height: 1.4;
+}
+
+[data-tooltip]:hover::after {
+    opacity: 1;
+}
+
+/* Style pour les cartes avec infobulles */
+.card,
+.pool-card,
+.synthesis-card {
+    position: relative;
+    gap: 10px;
+}
+
+.card[data-tooltip]::after,
+.pool-card[data-tooltip]::after,
+.synthesis-card[data-tooltip]::after {
+    width: 250px;
+    text-align: left;
+    left: 100%;
+    transform: translateX(10px);
+}
+
+@keyframes craftPulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 183, 3, 0.4);
+    }
+    70% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(255, 183, 3, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 183, 3, 0);
+    }
+}
+
+.synthesis-card.available {
+    animation: craftPulse 2s infinite;
+}
+
+
+
+.recipe-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8em;
+    margin-top: 5px;
+    color: var(--gold);
+}
+
+#philosophical-quote {
+    text-align: center;
+    margin: 20px 0;
+    padding: 15px;
+    border-left: 4px solid var(--gold);
+    background: rgba(26, 26, 46, 0.3);
+    border-radius: 8px;
+    font-style: italic;
+    animation: fadeIn 1s ease-out;
+}
+/* ===================================
+   PUBLIC BOX (Corrigé)
+   =================================== */
+#public-box {
+    grid-column: span 2;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(162, 155, 254, 0.1), rgba(162, 155, 254, 0.05));
+    padding: 15px;
+    border-radius: 15px;
+    border: 2px solid var(--public-color);
+    box-shadow: 0 0 20px rgba(162, 155, 254, 0.2);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+#public-label {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: var(--gold);
+    z-index: 1;
+    position: relative;
+}
+
+/* Jauge de faveur publique (version corrigée) */
+#public-fav {
+    position: absolute;
+    height: 20px;
+    width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #222; /* Fond noir par défaut */
+}
+
+/* Dégradé de fond pour les 3 zones */
+#public-fav-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        var(--danger) 0%,
+        var(--danger) var(--defeat-threshold),
+        var(--warning) var(--defeat-threshold),
+        var(--warning) var(--victory-threshold),
+        var(--success) var(--victory-threshold),
+        var(--success) 100%
+    );
+    z-index: 1; /* Derrière le contenu */
+    opacity: 0.5;
+}
+
+.gauge-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    background: linear-gradient(90deg, #000000, var(--public-color), #ffffff);
+    box-shadow: 0 0 10px currentColor;
+    z-index: 0; /* Par défaut, au-dessus du fond */
+    opacity: 0.5;
+}
+
+/* Marqueurs de seuil */
+.public-threshold-marker {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 2px;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 10; /* Au-dessus de tout */
+}
+
+.public-threshold-marker.victory {
+    left: var(--victory-threshold);
+    border-left: 2px dashed var(--success);
+}
+
+.public-threshold-marker.defeat {
+    left: var(--defeat-threshold);
+    border-left: 2px dashed var(--danger);
+}
+
+/* Affichage des seuils */
+#public-thresholds {
+    margin: 5px 0;
+    padding: 8px 10px;
+    background: rgba(26, 26, 46, 0.3);
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8em;
+}
+
+.threshold-info span {
+    padding: 3px 8px;
+    border-radius: 3px;
+}
+
+.threshold-info .victory {
+    background: rgba(42, 157, 143, 0.3);
+    color: var(--success);
+}
+
+.threshold-info .defeat {
+    background: rgba(214, 48, 49, 0.3);
+    color: var(--danger);
+}
+
+.threshold-info .current {
+    background: rgba(255, 183, 3, 0.3);
+    color: var(--gold);
+}
+
+.pool-card {
+    position: relative;
+    overflow: hidden;
+}
+.pool-card .card-image,
+.controls button .card-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+.pool-card .card-content {
+    position: relative;
+    z-index: 1;
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    margin-top: auto;
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
+}
+.synthesis-card {
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+.synthesis-card .recipe-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    opacity: 0.3;
+}
+.synthesis-card .recipe-header {
+    position: relative;
+    z-index: 1;
+}
+
+
+
+
+
+button:hover .button-icon {
+    opacity: 0.4;
+}
+
+.stat {
+    display: inline-block;
+    min-width: 20%;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+button:hover .stat {
+    transform: scale(1.1);
+}
+
+
+
+/* Styles pour les boutons d'action améliorés */
+.action-btn {
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/*.button-icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.2;
+    background-size: cover;
+    background-position: center;
+    transition: opacity 0.3s;
+}*/
+
+.action-btn .button-content {
+    position: relative;
+    z-index: 1;
+    padding: 5px;
+    
+}
+
+.action-btn .button-level, .button-label {
+    background: rgba(0, 0, 0, 0.25);
+    color:rgb(255, 255, 255);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    margin-right: 5px;
+    
+}
+
+.button-label{
+    font-size: 1.1em;
+}
+
+.action-btn .button-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.2em;
+    margin-top: 5px;
+}
+
+.action-btn.unlocked {
+    box-shadow: 0 0 15px rgba(230, 57, 70, 0.3);
+    transform: scale(1);
+    transition: transform 0.2s;
+    display: flex;
+}
+
+.action-btn.unlocked:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 20px rgba(230, 57, 70, 0.5);
+}
+
+.action-btn.locked {
+    cursor: not-allowed;
+    filter: grayscale(20%);
 }
