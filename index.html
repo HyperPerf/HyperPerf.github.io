@@ -7,32 +7,35 @@
         <link rel="stylesheet" href="css/styles.css" />
     </head>
     <body>
-        <h1>⚔️ LOGOS PUNCH ⚔️</h1>
-
-        <div id="setup-screen">
+        <div class="dust-particles" id="dust-particles"></div>
+        <div onclick='style="display:none"'>
+            <h1>⚔️ LOGOS PUNCH ⚔️</h1>
             <h2>La Joute Dialectique Suprême</h2>
             <div class="intro-text">
                 Dans l'arène philosophique, deux écoles s'affrontent. Choisissez votre doctrine.
             </div>
-            
-            <div id="btn-guide" style="text-align: center; margin: 20px 0;">
-    <button style="
-        background: linear-gradient(135deg, #14113f, #312f4c);
-        color: white;
-        border: none;
-        padding: 12px 30px;
-        font-size: 2.5em;
-        border-radius: 6px;
-        cursor: pointer;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        transition: all 0.3s;
-    "
-    onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 6px 8px rgba(0,0,0,0.15)'"
-    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 6px rgba(0,0,0,0.1)'"
-    onclick="window.location.href='guide.html'">
-        📖 Guide
-    </button>
-</div>
+        </div>
+
+        <div id="setup-screen">
+            <div id="btn-guide" style="text-align: center; margin: 20px 0">
+                <button
+                    style="
+                        background: linear-gradient(135deg, #14113f, #312f4c);
+                        color: white;
+                        border: none;
+                        padding: 12px 30px;
+                        font-size: 2.5em;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                        transition: all 0.3s;
+                    "
+                    onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 6px 8px rgba(0,0,0,0.15)'"
+                    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 6px rgba(0,0,0,0.1)'"
+                    onclick="window.location.href='guide.html'">
+                    📖 Guide
+                </button>
+            </div>
             <div class="doctrine-choice" id="player-doctrine-choice"></div>
             <div id="opponent-choice">
                 <h2>Choisissez la Doctrine de Votre Adversaire</h2>
@@ -47,20 +50,16 @@
         <div id="game-container" style="display: none">
             <div id="public-box">
                 <div id="public-label">L'AUDITOIRE ÉCOUTE...</div>
-                <div class="gauge-container">
-                    <div
-                        id="public-fav"
-                        class="gauge-fill"
-                        style="
-                            background: linear-gradient(90deg, #e63946, var(--public-color), #2a9d8f);
-                            width: 50%;
-                        "></div>
+                <div id="public-fav-container" class="gauge-container">
+                    <div id="public-fav-fill" class="gauge-fill"></div>
+                    <!-- Les marqueurs seront ajoutés ici par JS -->
                 </div>
                 <div class="stat-label">
                     <span>Adversaire</span>
                     <span id="public-percent">50%</span>
                     <span>Vous</span>
                 </div>
+                <div id="public-thresholds"></div>
             </div>
 
             <div class="status-header">
@@ -70,12 +69,13 @@
                         <span class="combo-dot" id="dot1"></span>
                         <span class="combo-dot" id="dot2"></span>
                         <span class="combo-dot" id="dot3"></span>
+                        <span class="combo-dot" id="dot4"></span>
+                        <!--<span class="combo-dot" id="dot5"></span>
+                        <span class="combo-dot" id="dot6"></span>-->
                     </div>
                 </div>
                 <div id="turn-counter">Tour: 1</div>
-                <span id="counter-badge" style="display: none; color: cyan; font-size: 1.1em"
-                    >⚡ PARADE DÉTECTÉE !</span
-                >
+                <span id="counter-badge" style="display: none; color: cyan; font-size: 1em">⚡ PARADE DÉTECTÉE !</span>
             </div>
 
             <div class="fighter-card" id="p1-card">
@@ -175,9 +175,9 @@
             <div id="log"></div>
             <div id="verbatim"></div>
 
-<div id="craft-pool" class="craft-section"></div>
             <!--<div id="btn-craft">CRAFT</div>-->
             <div class="controls" id="action-panel"></div>
+            <div id="craft-pool" class="craft-section"></div>
         </div>
 
         <div class="victory-screen" id="victory-screen" style="display: none" onclick='style="display:none"'>
@@ -197,7 +197,46 @@
                 </button>
             </div>
         </div>
+        
+        <!-- Ajoute dans ton body, après le contenu principal -->
+<div class="philosophy-particles" id="philosophy-particles"></div>
 
         <script type="module" src="js/main.js"></script>
+
+        <script>
+            // Génération des particules de poussière
+            function createDustParticles() {
+                const container = document.getElementById("dust-particles");
+                if (!container) return;
+
+                for (let i = 0; i < 15; i++) {
+                    const dust = document.createElement("div");
+                    dust.classList.add("dust");
+
+                    // Position et taille aléatoires
+                    const size = Math.random() * 5 + 5;
+                    const posX = Math.random() * 100;
+                    const delay = Math.random() * 10;
+                    const duration = 10 + Math.random() * 20;
+
+                    dust.style.width = `${size}px`;
+                    dust.style.height = `${size}px`;
+                    dust.style.left = `${posX}%`;
+                    dust.style.top = `${Math.random() * 100}%`;
+                    dust.style.animationDelay = `${delay}s`;
+                    dust.style.animationDuration = `${duration}s`;
+
+                    dust.style.opacity = Math.random() * 0.5 + 0.5;
+
+                    container.appendChild(dust);
+                }
+            }
+
+            // Initialisation au chargement
+            window.addEventListener("DOMContentLoaded", () => {
+                //displayRandomQuote();
+                createDustParticles();
+            });
+        </script>
     </body>
 </html>
