@@ -585,7 +585,7 @@
                 <li>
                     <strong>Résolution:</strong> L'argument est évalué en fonction de:
                     <ul>
-                        <li>Votre niveau de concentration</li>
+                        <li>(X) Votre niveau de concentration</li>
                         <li>La faveur publique actuelle</li>
                         <li>Les inclinations philosophiques</li>
                         <li>Le niveau de l'argument (1 à 3)</li>
@@ -637,19 +637,21 @@
                 </p>
                 <p><span class="icon">🎯</span> <strong>Précision:</strong> 75%</p>
                 <p><span class="icon">🧠</span> <strong>Coût:</strong> 12 concentration</p>
+                <p><span class="icon">⚖️</span><strong>Poids : ?</strong></p>
             </div>
 
-            <h3>📊 Poids des Arguments</h3>
+            <h3>⚖️ Poids des Arguments</h3>
             <p>Le poids d'un argument composé dépend:</p>
             <ul>
                 <li>Du poids des arguments de base <strong>qui ont réussi</strong></li>
-                <li>Des bonus de synthèse (si tous les arguments de base ont réussi)</li>
-                <li>Des inclinations philosophiques actuelles</li>
+                <li>(X) Des bonus de synthèse (si tous les arguments de base ont réussi)</li>
+                <li>Des inclinations philosophiques actuelles du joueur et du public</li>
             </ul>
 
             <div class="tip">
-                <strong>💡 Conseil:</strong> Privilégiez les combinaisons où tous les arguments de base ont réussi pour
-                obtenir des bonus de poids supplémentaires.
+                <strong>💡 Conseil:</strong>
+                Il est possible d'effectuer une synthèse avec plus d'arguments que nécessaire. Privilégiez les
+                combinaisons où tous les arguments de base ont réussi pour obtenir des bonus de poids supplémentaires.
             </div>
         </div>
 
@@ -706,6 +708,94 @@
                     <li><strong>Cynisme:</strong> Peut être contré par des arguments structurés</li>
                     <li><strong>Nihilisme:</strong> Vulnérable aux arguments basés sur l'espoir</li>
                 </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🔄 Mécaniques de Débat Dynamique</h2>
+
+            <h3>🎭 Figures de Style et Rhétorique (1.1.3 ou 1.1.4)</h3>
+            <div class="mechanic-box">
+                <p>
+                    (X) Les nouvelles <strong>figures de style</strong> permettent d'influencer le débat de manière plus
+                    subtile :
+                </p>
+
+                <table>
+                    <tr>
+                        <th>(X) Figure de Style</th>
+                        <th>(X) Effet</th>
+                        <th>(X) Coût en Lucidité</th>
+                        <th>(X) Doctrines Recommandées</th>
+                    </tr>
+                    <tr>
+                        <td>Métaphore</td>
+                        <td>+20% faveur publique</td>
+                        <td>10</td>
+                        <td>Épicurisme, Bouddhisme</td>
+                    </tr>
+                    <tr>
+                        <td>Réduction à l'absurde</td>
+                        <td>Provoque 1 tour d'Aporie</td>
+                        <td>20</td>
+                        <td>Stoïcisme, Nihilisme</td>
+                    </tr>
+                    <tr>
+                        <td>Pétition de principe</td>
+                        <td>Ignore la défense adverse</td>
+                        <td>15</td>
+                        <td>Cynisme</td>
+                    </tr>
+                    <tr>
+                        <td>Appel à l'autorité</td>
+                        <td>+15% précision</td>
+                        <td>12</td>
+                        <td>Stoïcisme</td>
+                    </tr>
+                </table>
+
+                <div class="warning">
+                    <strong>⚠️ (X) Attention:</strong> L'utilisation excessive des mêmes figures de style réduit leur
+                    efficacité (effet de répétition).
+                </div>
+            </div>
+
+            <h3>🧠 Système de Lucidité</h3>
+            <div class="mechanic-box">
+                <p>La <strong>lucidité</strong> est une nouvelle ressource qui influence :</p>
+                <ul>
+                    <li>(X) La capacité à utiliser des figures de style complexes</li>
+                    <li>(X) La résistance aux effets d'Aporie</li>
+                    <li>(X) La précision des arguments de haut niveau</li>
+                </ul>
+
+                <div class="example">
+                    <p><strong>Exemple :</strong></p>
+                    <ul>
+                        <li>Lucidité &gt; 70 : +10% précision sur les arguments</li>
+                        <li>Lucidité &lt; 30 : Risque accru d'Aporie</li>
+                        <li>Certaines capacités restaurent la lucidité</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>🔄 Réminiscence et Mémoire</h3>
+            <div class="mechanic-box">
+                <p>La capacité de <strong>Réminiscence</strong> permet de :</p>
+                <ul>
+                    <li>(X) Consulter l'historique des arguments utilisés</li>
+                    <li>(X) Coûte 20 points de concentration</li>
+                    <li>(X) Rend vulnérable au tour suivant</li>
+                </ul>
+
+                <div class="tip">
+                    <strong>💡 Conseil:</strong> Utilisez la réminiscence pour :
+                    <ul>
+                        <li>Analyser les faiblesses de l'adversaire</li>
+                        <li>Préparer une contre-attaque ciblée</li>
+                        <li>Éviter de répéter les mêmes erreurs</li>
+                    </ul>
+                </div>
             </div>
         </div>
 
@@ -857,6 +947,108 @@
                     class="game-screenshot" />
                 <p><em>Exemple d'interface de jeu</em></p>
             </div>
+
+            <h3>📊 Nouveaux Éléments d'Interface (1.1.3)</h3>
+            <div class="mechanic-box">
+                <ul>
+                    <li>
+                        <strong>(X) Jauge de Lucidité:</strong> Affichée en haut de l'écran, à côté de la concentration
+                        <ul>
+                            <li>Couleur bleue clair</li>
+                            <li>Se régénère partiellement chaque tour</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Barre de Faveur Améliorée:</strong>
+                        <ul>
+                            <li>3 zones de couleur distinctes</li>
+                            <li>Marqueurs de seuil dynamiques</li>
+                            <li>Pourcentage actuel affiché</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>(X) Panneau des Figures de Style:</strong>
+                        <ul>
+                            <li>Affiché sous les actions principales</li>
+                            <li>Coût en lucidité indiqué</li>
+                            <li>Effets décrits en survol</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>(X) Bouton de Réminiscence:</strong>
+                        <ul>
+                            <li>Disponible 1 fois par débat</li>
+                            <li>Coûte 20 points de concentration</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📊 Système de Faveur Publique Avancé (1.1.2)</h2>
+
+            <h3>🎯 Mécanique des Seuils Dynamiques</h3>
+            <div class="mechanic-box">
+                <p>
+                    La jauge de faveur publique est maintenant divisée en <strong>3 zones distinctes</strong> qui
+                    évoluent dynamiquement en fonction du nombre de tours :
+                </p>
+
+                <ol class="roman-list">
+                    <li>
+                        <strong>Zone de Défaite (Rouge)</strong> :
+                        <ul>
+                            <li>Seuil : <code>turnCount%</code> (ex: 20% au tour 20)</li>
+                            <li>Si votre faveur tombe en dessous de ce seuil, vous perdez la partie</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Zone de Débat (Orange)</strong> :
+                        <ul>
+                            <li>Entre les seuils de défaite et de victoire</li>
+                            <li>Zone neutre où le débat continue</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Zone de Victoire (Verte)</strong> :
+                        <ul>
+                            <li>Seuil : <code>100 - turnCount%</code> (ex: 80% au tour 20)</li>
+                            <li>Si votre faveur dépasse ce seuil, vous gagnez la partie</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <div class="example">
+                    <p><strong>Exemple au tour 20 :</strong></p>
+                    <ul>
+                        <li>Seuil de défaite : 20%</li>
+                        <li>Seuil de victoire : 80%</li>
+                        <li>Faveur actuelle : 65% → Débat équilibré</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>📈 Stratégies Associées</h3>
+            <div class="tip">
+                <strong>💡 Conseils pour maîtriser la faveur publique :</strong>
+                <ul>
+                    <li>En début de partie, visez au moins 60% de faveur pour rester en sécurité</li>
+                    <li>Les seuils se resserrent avec le temps - soyez plus agressif en fin de partie</li>
+                    <li>Utilisez des arguments adaptés aux inclinations du public pour gagner plus de faveur</li>
+                    <li>Les doctrines avec des capacités de persuasion (comme Épicurisme) ont un avantage naturel</li>
+                </ul>
+            </div>
+
+            <div class="flowchart">
+                <pre>
+    Tour 10:  🏆90%   ⚠️10%   👥Actuel: 55%
+    Tour 20:  🏆80%   ⚠️20%   👥Actuel: 65%
+    Tour 30:  🏆70%   ⚠️30%   👥Actuel: 75% → VICTOIRE
+        </pre
+                >
+                <p><em>Évolution des seuils au fil des tours</em></p>
+            </div>
         </div>
 
         <div class="section">
@@ -963,8 +1155,12 @@
                     <td>Une carte représentant un concept philosophique utilisé pour attaquer ou défendre</td>
                 </tr>
                 <tr>
-                    <td>Pool de Craft</td>
-                    <td>Zone où sont stockés les arguments sélectionnés pour la synthèse</td>
+                    <td>Atelier dialectique</td>
+                    <td>Ensemble du corpus et de la synthèse dialectique</td>
+                </tr>
+                <tr>
+                    <td>Corpus (Pool de craft)</td>
+                    <td>Ensemble des arguments utilisables pour la synthèse</td>
                 </tr>
                 <tr>
                     <td>Synthèse Dialectique</td>
@@ -991,6 +1187,96 @@
                     <td>Ressource nécessaire pour utiliser des arguments puissants</td>
                 </tr>
             </table>
+        </div>
+
+        <div class="section">
+            <h2>📖 Nouveaux Termes du Glossaire (1.1.3)</h2>
+
+            <table>
+                <tr>
+                    <th>Terme</th>
+                    <th>Définition</th>
+                    <th>Impact sur le Gameplay</th>
+                </tr>
+                <tr>
+                    <td>Lucidité</td>
+                    <td>Ressource cognitive pour utiliser des arguments complexes</td>
+                    <td>Affecte la précision et la résistance à l'Aporie</td>
+                </tr>
+                <tr>
+                    <td>Réminiscence</td>
+                    <td>Capacité à consulter l'historique des arguments</td>
+                    <td>Coûte de la concentration, rend vulnérable</td>
+                </tr>
+                <tr>
+                    <td>Figure de Style</td>
+                    <td>Technique rhétorique spéciale</td>
+                    <td>Coûte de la lucidité, effets variés</td>
+                </tr>
+                <tr>
+                    <td>Seuil Dynamique</td>
+                    <td>Limite de victoire/défaite qui évolue avec les tours</td>
+                    <td>Resserre les marges en fin de partie</td>
+                </tr>
+                <tr>
+                    <td>Répétition Rhétorique</td>
+                    <td>Utilisation multiple de la même figure de style</td>
+                    <td>Réduit l'efficacité après 3 utilisations</td>
+                </tr>
+            </table>
+
+            <div class="tip">
+                <strong>💡 Astuce:</strong> Les nouvelles mécaniques ajoutent une couche stratégique supplémentaire.
+                <ul>
+                    <li>Gérez votre lucidité comme une ressource précieuse</li>
+                    <li>Adaptez vos figures de style à la doctrine adverse</li>
+                    <li>Surveillez l'évolution des seuils dynamiques</li>
+                </ul>
+            </div>
+        </div>
+        <div class="section">
+            <h2>🎯 Nouveaux Systèmes de Victoire</h2>
+
+            <h3>🏆 Victoire par Influence (1.1.3)</h3>
+            <div class="mechanic-box">
+                <p>
+                    En plus de la victoire classique (réduction de la vitalité à 0), vous pouvez maintenant gagner par :
+                </p>
+
+                <ol class="roman-list">
+                    <li>
+                        <strong>Domination de la Faveur Publique</strong> :
+                        <ul>
+                            <li>Atteindre le seuil de victoire dynamique</li>
+                            <li>Le public adopte vos valeurs philosophiques</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Transcendance Philosophique</strong> :
+                        <ul>
+                            <li>Atteindre le niveau 3 avec 3 arguments réussis consécutifs</li>
+                            <li>Débloque des capacités ultimes</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Épuisement de l'Adversaire</strong> :
+                        <ul>
+                            <li>Faire tomber sa faveur en dessous du seuil de défaite</li>
+                            <li>Provoque une crise existentielle</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+
+            <div class="flowchart">
+                <pre>
+    [Victoire Classique]       [Victoire par Faveur]       [Victoire par Transcendance]
+          ↓                         ↓                              ↓
+    Vitalité = 0            Faveur > Seuil Dynamique       Niveau 3 + 3 succès consécutifs
+        </pre
+                >
+                <p><em>Nouvelles conditions de victoire</em></p>
+            </div>
         </div>
 
         <div class="section">
@@ -1042,7 +1328,7 @@
                 border-radius: 8px;
             ">
             <p>
-                Version 1.1.0 - Dernière mise à jour: 03/02/2026<br />
+                Version 1.1.2 - Dernière mise à jour: 06/02/2026<br />
 
                 © 2026
             </p>
